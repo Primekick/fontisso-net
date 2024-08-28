@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -20,7 +21,7 @@ public partial class FileInputView : UserControl
     {
         dragEvent.DragEffects &= DragDropEffects.Copy | DragDropEffects.Link;
 
-        if (!dragEvent.Data.Contains(DataFormats.FileNames))
+        if (!dragEvent.Data.Contains(DataFormats.Files))
         {
             dragEvent.DragEffects = DragDropEffects.None;
         }
@@ -28,7 +29,7 @@ public partial class FileInputView : UserControl
 
     private async Task Drop(object sender, DragEventArgs dragEvent)
     {
-        if (!dragEvent.Data.Contains(DataFormats.FileNames))
+        if (!dragEvent.Data.Contains(DataFormats.Files))
         {
             return;
         }

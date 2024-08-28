@@ -10,22 +10,22 @@
              x:DataType="vm:FileInputViewModel">
 
     <Design.DataContext>
-        <vm:FileInputViewModel/>
+        <vm:FileInputViewModel />
     </Design.DataContext>
 
-   <material:Card Margin="8">
+    <material:Card Margin="8">
         <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="16">
-            <TextBlock Text="Wybór pliku" 
-                       Classes="Headline6" 
-                       Margin="0,0,0,16"/>
-            
-            <TextBlock Grid.Row="1" 
+            <TextBlock Text="Wybór pliku"
+                       Classes="Headline6"
+                       Margin="0,0,0,16" />
+
+            <TextBlock Grid.Row="1"
                        Text="Przeciągnij i upuść plik lub użyj przycisku poniżej"
                        Classes="Body2"
-                       HorizontalAlignment="Center" 
-                       Margin="0,0,0,16"/>
-            
-            <material:Card Grid.Row="2" 
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,16" />
+
+            <material:Card Grid.Row="2"
                            Margin="0,0,0,16"
                            Padding="16"
                            DragDrop.AllowDrop="True">
@@ -34,33 +34,33 @@
                                 VerticalAlignment="Center"
                                 IsVisible="{Binding !State.HasFile}">
                         <icons:MaterialIcon Kind="FileUploadOutline"
-                                            Width="48" 
+                                            Width="48"
                                             Height="48"
-                                            Margin="0,0,0,8"/>
+                                            Margin="0,0,0,8" />
                         <TextBlock Text="Upuść tutaj"
-                                   Classes="Body1"/>
+                                   Classes="Body1" />
                     </StackPanel>
-                    
+
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 IsVisible="{Binding State.HasFile}">
-                        <Image Source="{Binding State.FileIcon}" 
-                               Width="32" 
-                               Height="32" 
-                               Margin="0,0,16,0"/>
-                        <TextBlock Text="{Binding State.FileName}" 
+                        <Image Source="{Binding State.FileIcon}"
+                               Width="48"
+                               Height="48"
+                               Margin="0,0,16,0" />
+                        <TextBlock Text="{Binding State.FileName}"
                                    VerticalAlignment="Center"
-                                   Classes="Body1"/>
+                                   Classes="Body1" />
                     </StackPanel>
                 </Grid>
             </material:Card>
-            
-            <Button Grid.Row="3" 
+
+            <Button Grid.Row="3"
                     Content="WYBIERZ PLIK"
                     Classes="Outlined"
                     Command="{Binding SelectFileCommand}"
-                    HorizontalAlignment="Center"/>
+                    HorizontalAlignment="Center" />
         </Grid>
     </material:Card>
 </UserControl>
