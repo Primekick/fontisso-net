@@ -10,15 +10,18 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Fontisso.NET.Services;
 
 namespace Fontisso.NET.ViewModels;
 
 public partial class FileInputViewModel : ViewModelBase
 {
     [ObservableProperty] private AppViewModel _state;
+    private IResourceService _resourceService;
 
-    public FileInputViewModel(AppViewModel state)
+    public FileInputViewModel(AppViewModel state, IResourceService resourceService)
     {
+        _resourceService = resourceService;
         State = state;
     }
     
@@ -49,12 +52,8 @@ public partial class FileInputViewModel : ViewModelBase
         State.FileIcon = await GetFileIconAsync(filePath);
         State.HasFile = true;
     }
-    
-    private async Task<Bitmap> GetFileIconAsync(string filePath)
-    {
-        // TODO: extract icon from file
-        return new Bitmap(AssetLoader.Open(new Uri("avares://Fontisso.NET/Assets/avalonia-logo.ico")));
-    }
+
+    private async Task<Bitmap> GetFileIconAsync(string filePath) => await _resourceService.ExtractIconFromFile(filePath);
     
     private Window GetActiveWindow() =>
         Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
