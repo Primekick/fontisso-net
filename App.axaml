@@ -1,8 +1,9 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="Fontisso.NET.App"
+             xmlns:material="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
              xmlns:local="using:Fontisso.NET"
-             RequestedThemeVariant="Default">
+             RequestedThemeVariant="Dark">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.DataTemplates>
@@ -10,6 +11,6 @@
     </Application.DataTemplates>
   
     <Application.Styles>
-        <FluentTheme />
+        <material:MaterialTheme BaseTheme="Light" PrimaryColor="Purple" SecondaryColor="Lime" />
     </Application.Styles>
 </Application>
