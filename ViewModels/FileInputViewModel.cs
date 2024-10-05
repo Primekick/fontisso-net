@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,23 +7,25 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Fontisso.NET.Services;
+using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Fontisso.NET.ViewModels;
 
 public partial class FileInputViewModel : ViewModelBase
 {
     [ObservableProperty] private AppViewModel _state;
-    private IResourceService _resourceService;
+    private readonly IResourceService _resourceService;
+    private readonly IFontService _fontService;
 
-    public FileInputViewModel(AppViewModel state, IResourceService resourceService)
+    public FileInputViewModel(AppViewModel state, IResourceService resourceService, IFontService fontService)
     {
-        _resourceService = resourceService;
         State = state;
+        _resourceService = resourceService;
+        _fontService = fontService;
     }
     
     [RelayCommand]
@@ -40,7 +43,7 @@ public partial class FileInputViewModel : ViewModelBase
 
     public async Task HandleDroppedFileAsync(string[] selectedFiles)
     {
-        if (selectedFiles.Length > 0)
+        if (selectedFiles is { Length: > 0 })
         {
             await ProcessFileAsync(selectedFiles.First());
         }
@@ -49,11 +52,9 @@ public partial class FileInputViewModel : ViewModelBase
     private async Task ProcessFileAsync(string filePath)
     {
         State.FileName = Path.GetFileName(filePath);
-        State.FileIcon = await GetFileIconAsync(filePath);
+        State.FileIcon = await _resourceService.ExtractIconFromFile(filePath);
         State.HasFile = true;
     }
-
-    private async Task<Bitmap> GetFileIconAsync(string filePath) => await _resourceService.ExtractIconFromFile(filePath);
     
     private Window GetActiveWindow() =>
         Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
