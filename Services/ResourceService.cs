@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Fontisso.NET.Helpers;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Fontisso.NET.Services;
@@ -34,12 +35,9 @@ public class ResourceService : IResourceService
         try
         {
             using var icon = Icon.FromHandle(iconHandle);
-            using var gdiPlusBitmap = icon.ToBitmap();
-            using var stream = new MemoryStream();
-            
-            gdiPlusBitmap.Save(stream, ImageFormat.Png);
-            stream.Seek(0, SeekOrigin.Begin);
-            return new Bitmap(stream);
+            using var gdiBitmap = icon.ToBitmap();
+
+            return BitmapConverter.FromGdiBitmapToAvaloniaBitmap(gdiBitmap);
         }
         finally
         {
