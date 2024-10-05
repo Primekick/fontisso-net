@@ -3,7 +3,9 @@
         xmlns:vm="using:Fontisso.NET.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="660" d:DesignHeight="940"
+        Width="660" Height="940"
+        CanResize="False"
         x:Class="Fontisso.NET.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -15,5 +17,7 @@
 
     <StackPanel Margin="8">
         <ContentControl Content="{Binding FileInput}" />
+        <ContentControl Content="{Binding FontPicker}" />
+        <ContentControl Content="{Binding Summary}" />
     </StackPanel>
 </Window>

@@ -29,13 +29,13 @@
                            Margin="0,0,0,16"
                            Padding="16"
                            DragDrop.AllowDrop="True">
-                <Grid RowDefinitions="*,Auto">
+                <Grid RowDefinitions="60">
                     <StackPanel HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 IsVisible="{Binding !State.HasFile}">
                         <icons:MaterialIcon Kind="FileUploadOutline"
-                                            Width="48"
-                                            Height="48"
+                                            Width="32"
+                                            Height="32"
                                             Margin="0,0,0,8" />
                         <TextBlock Text="Upuść tutaj"
                                    Classes="Body1" />
@@ -46,8 +46,6 @@
                                 VerticalAlignment="Center"
                                 IsVisible="{Binding State.HasFile}">
                         <Image Source="{Binding State.FileIcon}"
-                               Width="48"
-                               Height="48"
                                Margin="0,0,16,0" />
                         <TextBlock Text="{Binding State.FileName}"
                                    VerticalAlignment="Center"
