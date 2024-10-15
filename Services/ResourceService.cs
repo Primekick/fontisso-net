@@ -12,6 +12,8 @@ namespace Fontisso.NET.Services;
 public interface IResourceService
 {
     Task<Bitmap> ExtractIconFromFile(string filePath);
+    Task WriteResource(string filePath, int resourceId, byte[] data);
+    Task<byte[]> ExtractResource(int resourceId);
 }
 
 public class ResourceService : IResourceService
@@ -49,7 +51,7 @@ public class ResourceService : IResourceService
     public async Task<Bitmap> ExtractIconFromFile(string filePath) => await Task.Run(() =>
     {
         var iconHandle = ExtractIcon(IntPtr.Zero, filePath, 0);
-        
+
         // null handle means there are no embedded icons
         if (iconHandle == IntPtr.Zero)
         {
@@ -68,4 +70,30 @@ public class ResourceService : IResourceService
             DestroyIcon(iconHandle);
         }
     });
+
+    public async Task WriteResource(string filePath, int resourceId, byte[] data) => await Task.Run(() =>
+    {
+        var updateHandle = BeginUpdateResource(filePath, false);
+        if (updateHandle == IntPtr.Zero)
+        {
+            throw new Exception("Failed to begin update resource.");
+        }
+
+        var result = UpdateResource(updateHandle, RT_RCDATA, resourceId, 0, data, (uint)data.Length);
+        if (!result)
+        {
+            throw new Exception("Failed to update resource.");
+        }
+
+        result = EndUpdateResource(updateHandle, false);
+        if (!result)
+        {
+            throw new Exception("Failed to end update resource.");
+        }
+    });
+
+    public async Task<byte[]> ExtractResource(int resourceId)
+    {
+        throw new NotImplementedException();
+    }
 }
