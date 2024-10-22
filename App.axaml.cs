@@ -27,13 +27,8 @@ public partial class App : Application
             BindingPlugins.DataValidators.RemoveAt(0);
             
             var services = new ServiceCollection();
-            services.AddSingleton<IFontService, FontService>()
-                .AddSingleton<IResourceService, ResourceService>()
-                .AddSingleton<AppViewModel>()
-                .AddSingleton<FileInputViewModel>()
-                .AddSingleton<FontPickerViewModel>()
-                .AddSingleton<SummaryViewModel>()
-                .AddSingleton<MainWindowViewModel>();
+            services.AddFontissoServices()
+                .AddFontissoViewModels();
             
             var provider = services.BuildServiceProvider();
             Ioc.Default.ConfigureServices(provider);
