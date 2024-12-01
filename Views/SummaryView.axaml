@@ -5,7 +5,7 @@
              xmlns:vm="using:Fontisso.NET.ViewModels"
              xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              xmlns:icons="using:Material.Icons.Avalonia"
-             mc:Ignorable="d" d:DesignWidth="660" d:DesignHeight="340"
+             mc:Ignorable="d" d:DesignWidth="660" d:DesignHeight="640"
              x:Class="Fontisso.NET.Views.SummaryView"
              x:DataType="vm:SummaryViewModel">
 

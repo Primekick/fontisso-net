@@ -3,9 +3,9 @@
         xmlns:vm="using:Fontisso.NET.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="660" d:DesignHeight="940"
-        Width="660" Height="940"
-        CanResize="False"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="640"
+        Width="1280" Height="640"
+        CanResize="True"
         x:Class="Fontisso.NET.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -14,10 +14,14 @@
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-
-    <StackPanel Margin="8">
-        <ContentControl Content="{Binding FileInput}" />
-        <ContentControl Content="{Binding FontPicker}" />
-        <ContentControl Content="{Binding Summary}" />
-    </StackPanel>
+    
+    <Grid RowDefinitions="*,Auto" ColumnDefinitions="3*,4*,4*">
+        <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding FileInput}" />
+        <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding FontPicker}" />
+        <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding Summary}" />
+        <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center"
+                Margin="16 0 16 16"
+                Content="PATCHUJ"
+                Command="{Binding ConfirmCommand}"/>
+    </Grid>
 </Window>
