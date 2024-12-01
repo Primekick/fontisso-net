@@ -22,12 +22,18 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            ViewLocator.Register<MainWindowViewModel, MainWindow>();
+            ViewLocator.Register<FileInputViewModel, FileInputView>();
+            ViewLocator.Register<FontPickerViewModel, FontPickerView>();
+            ViewLocator.Register<SummaryViewModel, SummaryView>();
+            
             // Line below is needed to remove Avalonia data validation.
             // Without this line you will get duplicate validations from both Avalonia and CT
             BindingPlugins.DataValidators.RemoveAt(0);
             
             var services = new ServiceCollection();
             services.AddFontissoServices()
+                .AddState()
                 .AddFontissoViewModels();
             
             var provider = services.BuildServiceProvider();

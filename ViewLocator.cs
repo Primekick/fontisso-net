@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Fontisso.NET.ViewModels;
@@ -8,22 +10,25 @@ namespace Fontisso.NET;
 public class ViewLocator : IDataTemplate
 {
 
-    public Control? Build(object? data)
-    {
-        if (data is null)
-            return null;
-        
-        var name = data.GetType().FullName!.Replace("ViewModel", "View", StringComparison.Ordinal);
-        var type = Type.GetType(name);
+    private static Dictionary<Type, Func<Control>> Registration = new Dictionary<Type, Func<Control>> ();
 
-        if (type != null)
-        {
-            var control = (Control)Activator.CreateInstance(type)!;
-            control.DataContext = data;
-            return control;
+    public static void Register<TViewModel, TView>() where TView : Control, new()
+    {
+        Registration.Add(typeof(TViewModel), () => new TView());
+    }
+    public static void Register<TViewModel, TView>(Func<TView> factory) where TView : Control
+    {
+        Registration.Add(typeof(TViewModel), factory);
+    }
+
+    public Control Build(object data) {
+        var type = data.GetType();
+    
+        if (Registration.TryGetValue(type, out var factory)) {
+            return factory();
         }
-        
-        return new TextBlock { Text = "Not Found: " + name };
+
+        return new TextBlock { Text = "Not Found: " + type };
     }
 
     public bool Match(object? data)
