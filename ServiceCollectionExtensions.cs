@@ -10,7 +10,8 @@ public static class ServiceCollectionExtensions
     
     public static IServiceCollection AddState(this IServiceCollection services)
     {
-        services.AddSingleton<AppViewModel>();
+        services.AddSingleton<IAppState, AppState>();
+        services.AddSingleton<AppState>();
         return services;
     }
     

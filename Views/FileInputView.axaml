@@ -21,18 +21,19 @@
 
             <TextBlock Grid.Row="1"
                        Text="Przeciągnij i upuść plik lub użyj przycisku poniżej"
+                       TextWrapping="Wrap"
                        Classes="Body2"
-                       HorizontalAlignment="Center"
+                       HorizontalAlignment="Left"
                        Margin="0,0,0,16" />
 
             <material:Card Grid.Row="2"
                            Margin="0,0,0,16"
                            Padding="16"
                            DragDrop.AllowDrop="True">
-                <Grid RowDefinitions="60">
+                <Grid RowDefinitions="*">
                     <StackPanel HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                IsVisible="{Binding !State.HasFile}">
+                                IsVisible="{Binding !State.FileData.HasFile}">
                         <icons:MaterialIcon Kind="FileUploadOutline"
                                             Width="32"
                                             Height="32"
@@ -44,10 +45,10 @@
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                IsVisible="{Binding State.HasFile}">
-                        <Image Source="{Binding State.FileIcon}"
-                               Margin="0,0,16,0" />
-                        <TextBlock Text="{Binding State.FileName}"
+                                IsVisible="{Binding State.FileData.HasFile}">
+                        <Image Source="{Binding State.FileData.FileIcon}"
+                               Height="32" Margin="0,0,16,0" />
+                        <TextBlock Text="{Binding State.FileData.FileName}"
                                    VerticalAlignment="Center"
                                    Classes="Body1" />
                     </StackPanel>

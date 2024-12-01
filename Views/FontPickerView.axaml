@@ -12,8 +12,14 @@
     <Design.DataContext>
         <vm:FontPickerViewModel />
     </Design.DataContext>
+    
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Loaded">
+            <InvokeCommandAction Command="{Binding LoadFontsCommand}"/>
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
 
-    <material:Card Margin="8" Height="340">
+    <material:Card Margin="8">
         <Grid RowDefinitions="Auto,Auto,*">
             <TextBlock Grid.Row="0"
                        Text="Wybór fontu"
@@ -36,7 +42,8 @@
             </material:Card>
 
             <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="16 0 16 16">
-                <ListBox ItemsSource="{Binding FilteredFonts}"
+                <ListBox Name="ListBox"
+                         ItemsSource="{Binding FilteredFonts}"
                          SelectedItem="{Binding State.SelectedFont}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>

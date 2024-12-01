@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -9,6 +7,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using Fontisso.NET.Helpers;
 using System.Text;
+using System.Threading.Tasks;
 using Avalonia.Platform;
 using Fontisso.NET.Models;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
@@ -20,8 +19,10 @@ namespace Fontisso.NET.Services;
 
 public interface IFontService
 {
-    Bitmap RenderTextToBitmap(string text, byte[] fontData, float fontSize, Color textColor, Color backgroundColor);
-    ObservableCollection<FontEntry> LoadAvailableFonts();
+    Task<Bitmap> RenderTextToBitmap(string text, byte[] fontData, float fontSize, Color textColor,
+        Color backgroundColor, int width);
+
+    Task<IReadOnlyList<FontEntry>> LoadAvailableFonts();
 }
 
 public class FontService : IFontService
@@ -37,76 +38,78 @@ public class FontService : IFontService
     }
 
     [SuppressMessage("Interoperability", "CA1416:Walidacja zgodności z platformą")]
-    public Bitmap RenderTextToBitmap(string text, byte[] fontData, float fontSize, Color textColor, Color backgroundColor)
-    {
-        var face = new Face(_freetype, fontData, 0);
-
-        var width = 290;
-        var height = 40;
-
-        var gdiBitmap = new System.Drawing.Bitmap(width, height, PixelFormat.Format32bppArgb);
-        var cursorX = 4;
-        var cursorY = 24;
-        using (var graphics = Graphics.FromImage(gdiBitmap))
+    public async Task<Bitmap> RenderTextToBitmap(string text, byte[] fontData, float fontSize, Color textColor,
+        Color backgroundColor, int width) =>
+        await Task.Run(() =>
         {
-            graphics.Clear(backgroundColor);
-            graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
-            graphics.SmoothingMode = SmoothingMode.None;
+            var face = new Face(_freetype, fontData, 0);
 
-            foreach (var rune in text)
+            var initWidth = width / 2;
+            var height = 40;
+
+            var gdiBitmap = new System.Drawing.Bitmap(initWidth, height, PixelFormat.Format32bppArgb);
+            var cursorX = 4;
+            var cursorY = 24;
+            using (var graphics = Graphics.FromImage(gdiBitmap))
             {
-                // TODO: support other ANSI encodings
-                var convertedRune = Encoding.Convert(
-                    Encoding.Unicode,
-                    Encoding.GetEncoding(1250),
-                    Encoding.Unicode.GetBytes(new[]
-                    {
-                        rune
-                    }));
-                var glyphIndex = face.GetCharIndex(convertedRune[0]);
-                face.LoadGlyph(glyphIndex, LoadFlags.Default, LoadTarget.Normal);
-                face.Glyph.RenderGlyph(RenderMode.Normal);
+                graphics.Clear(backgroundColor);
+                graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+                graphics.SmoothingMode = SmoothingMode.None;
 
-                var ftBitmap = face.Glyph.Bitmap;
-                var bitmapRect = new Rectangle(0, 0, ftBitmap.Width, ftBitmap.Rows);
-                using (var glyphBitmap = new System.Drawing.Bitmap(ftBitmap.Width, ftBitmap.Rows, PixelFormat.Format1bppIndexed))
+                foreach (var rune in text)
                 {
-                    var locked = glyphBitmap.LockBits(
-                        bitmapRect,
-                        ImageLockMode.ReadWrite,
-                        PixelFormat.Format1bppIndexed);
+                    // TODO: support other ANSI encodings
+                    var convertedRune = Encoding.Convert(
+                        Encoding.Unicode,
+                        Encoding.GetEncoding(1250),
+                        Encoding.Unicode.GetBytes(new[]
+                        {
+                            rune
+                        }));
+                    var glyphIndex = face.GetCharIndex(convertedRune[0]);
+                    face.LoadGlyph(glyphIndex, LoadFlags.Default, LoadTarget.Normal);
+                    face.Glyph.RenderGlyph(RenderMode.Normal);
 
-                    for (var row = 0; row < ftBitmap.Rows; row++) unsafe
+                    var ftBitmap = face.Glyph.Bitmap;
+                    var bitmapRect = new Rectangle(0, 0, ftBitmap.Width, ftBitmap.Rows);
+                    using (var glyphBitmap = new System.Drawing.Bitmap(ftBitmap.Width, ftBitmap.Rows, PixelFormat.Format1bppIndexed))
                     {
-                        Buffer.MemoryCopy(
-                            (ftBitmap.Buffer + row * ftBitmap.Pitch).ToPointer(),
-                            (locked.Scan0 + row * locked.Stride).ToPointer(),
-                            locked.Stride,
-                            locked.Stride);
+                        var locked = glyphBitmap.LockBits(
+                            bitmapRect,
+                            ImageLockMode.ReadWrite,
+                            PixelFormat.Format1bppIndexed);
+
+                        for (var row = 0; row < ftBitmap.Rows; row++) unsafe
+                        {
+                            Buffer.MemoryCopy(
+                                (ftBitmap.Buffer + row * ftBitmap.Pitch).ToPointer(),
+                                (locked.Scan0 + row * locked.Stride).ToPointer(),
+                                locked.Stride,
+                                locked.Stride);
+                        }
+
+                        glyphBitmap.UnlockBits(locked);
+
+                        // .fon fonts work only with mono palettes
+                        var palette = glyphBitmap.Palette;
+                        palette.Entries[0] = Color.FromArgb(0, textColor);
+                        palette.Entries[1] = Color.FromArgb(255, textColor);
+                        glyphBitmap.Palette = palette;
+
+                        // DrawImage can result in blurry image so we're using DrawImageUnscaled
+                        var drawX = cursorX + face.Glyph.BitmapLeft;
+                        var drawY = cursorY - face.Glyph.BitmapTop;
+                        graphics.DrawImageUnscaled(glyphBitmap, drawX, drawY);
                     }
 
-                    glyphBitmap.UnlockBits(locked);
-                    
-                    // .fon fonts work only with mono palettes
-                    var palette = glyphBitmap.Palette;
-                    palette.Entries[0] = Color.FromArgb(0, textColor);
-                    palette.Entries[1] = Color.FromArgb(255, textColor);
-                    glyphBitmap.Palette = palette;
-
-                    // DrawImage can result in blurry image so we're using DrawImageUnscaled
-                    var drawX = cursorX + face.Glyph.BitmapLeft;
-                    var drawY = cursorY - face.Glyph.BitmapTop;
-                    graphics.DrawImageUnscaled(glyphBitmap, drawX, drawY);
+                    cursorX += (int)face.Glyph.Metrics.HorizontalAdvance;
                 }
-
-                cursorX += (int)face.Glyph.Metrics.HorizontalAdvance;
             }
-        }
 
-        return BitmapConverter.FromGdiBitmapToAvaloniaBitmap(ScaleBitmap(gdiBitmap, 2.0f));
-    }
-    
-    
+            return BitmapConverter.FromGdiBitmapToAvaloniaBitmap(ScaleBitmap(gdiBitmap, 2.0f));
+        });
+
+
     [SuppressMessage("Interoperability", "CA1416:Walidacja zgodności z platformą")]
     private static System.Drawing.Bitmap ScaleBitmap(System.Drawing.Bitmap sourceBitmap, float scaleFactor)
     {
@@ -119,7 +122,7 @@ public class FontService : IFontService
         graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
         graphics.PixelOffsetMode = PixelOffsetMode.Half;
 
-        graphics.DrawImage(sourceBitmap, 
+        graphics.DrawImage(sourceBitmap,
             new Rectangle(0, 0, newWidth, newHeight),
             new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height),
             GraphicsUnit.Pixel);
@@ -128,29 +131,35 @@ public class FontService : IFontService
     }
 
 
-    public ObservableCollection<FontEntry> LoadAvailableFonts()
+    public async Task<IReadOnlyList<FontEntry>> LoadAvailableFonts()
     {
-        var fontEntries = new ObservableCollection<FontEntry>();
-        foreach (var uri in _fontUris)
+        try
         {
-            var data = AssetLoader.Open(uri).ReadToByteArray();
-            var parts = uri.Segments.TakeLast(2).ToArray();
-            if (parts is not [var kind, var name]) 
-                continue;
-
-            var fontKind = kind.Replace("/", "") switch
-            {
-                "RPG2000" => FontKind.RPG2000,
-                "RPG2000G" => FontKind.RPG2000G,
-                _ => throw new UnreachableException()
-            };
-            fontEntries.Add(new FontEntry(
-                fontKind,
-                data,
-                name
-            ));
+            return await Task.Run(() => _fontUris
+                .Select(uri => new
+                {
+                    Uri = uri,
+                    Data = AssetLoader.Open(uri).ReadToByteArray(),
+                    Segments = uri.Segments.TakeLast(2).ToArray()
+                })
+                .Where(x => x.Segments.Length == 2)
+                .Select(x => new FontEntry(
+                    GetFontKind(x.Segments[0].TrimEnd('/')),
+                    x.Data,
+                    x.Segments[1]))
+                .ToList());
         }
-
-        return fontEntries;
+        catch (Exception ex)
+        {
+            // TODO: error handling, assume happy path for now
+            return Array.Empty<FontEntry>();
+        }
     }
+
+    private FontKind GetFontKind(string folderName) => folderName switch
+    {
+        "RPG2000" => FontKind.RPG2000,
+        "RPG2000G" => FontKind.RPG2000G,
+        _ => throw new InvalidOperationException($"Unknown font kind: {folderName}")
+    };
 }

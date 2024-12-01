@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Fontisso.NET.Models;
-using Fontisso.NET.Services;
 
 namespace Fontisso.NET.ViewModels;
 
@@ -13,24 +13,31 @@ public partial class FontPickerViewModel : ViewModelBase
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FilteredFonts))]
-    private string searchText = string.Empty;
+    private string _searchText = string.Empty;
     
-    [ObservableProperty] private AppViewModel _state;
-    private readonly IFontService _fontService;
+    [ObservableProperty]
+    private IAppState _state;
     
-    public FontPickerViewModel(AppViewModel state, IFontService fontService)
+    public FontPickerViewModel(IAppState state)
     {
-        _fontService = fontService;
         State = state;
-        State.Fonts = _fontService.LoadAvailableFonts();
+        State.PropertyChanged += OnStatePropertyChanged;
+    }
+
+    private void OnStatePropertyChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        if (args.PropertyName == nameof(State.Fonts))
+        {
+            OnPropertyChanged(nameof(FilteredFonts));
+        }
     }
 
     public IEnumerable<FontEntry> FilteredFonts =>
         State.Fonts.Where(f => f.Details.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
-
+    
     [RelayCommand]
-    private void SelectFont(FontEntry font)
+    private async Task LoadFonts()
     {
-        State.SelectedFont = font;
+        await State.LoadFonts();
     }
 }
