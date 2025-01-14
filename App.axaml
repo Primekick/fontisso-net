@@ -3,6 +3,7 @@
              x:Class="Fontisso.NET.App"
              xmlns:material="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
              xmlns:local="using:Fontisso.NET"
              RequestedThemeVariant="Dark">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
@@ -14,5 +15,6 @@
     <Application.Styles>
         <material:MaterialTheme BaseTheme="Dark" PrimaryColor="Purple" SecondaryColor="Lime" />
         <materialIcons:MaterialIconStyles />
+        <dialogHostAvalonia:DialogHostStyles />
     </Application.Styles>
 </Application>
