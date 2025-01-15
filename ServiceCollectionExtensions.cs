@@ -18,7 +18,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddFontissoServices(this IServiceCollection services)
     {
         services.AddSingleton<IFontService, FontService>()
-            .AddSingleton<IResourceService, ResourceService>();
+            .AddSingleton<IResourceService, ResourceService>()
+            .AddSingleton<IPatchingService, PatchingService>();
         return services;
     }
 
