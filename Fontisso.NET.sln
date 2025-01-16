@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fontisso.NET", "Fontisso.NET\Fontisso.NET.csproj", "{8954B956-9D30-471E-9BD5-0007583F8CB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fontisso.NET.Flux", "Fontisso.NET.Flux\Fontisso.NET.Flux.csproj", "{B29A2C85-AC15-46B4-BC99-CADB76C4BBAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{8954B956-9D30-471E-9BD5-0007583F8CB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8954B956-9D30-471E-9BD5-0007583F8CB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8954B956-9D30-471E-9BD5-0007583F8CB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B29A2C85-AC15-46B4-BC99-CADB76C4BBAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B29A2C85-AC15-46B4-BC99-CADB76C4BBAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B29A2C85-AC15-46B4-BC99-CADB76C4BBAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B29A2C85-AC15-46B4-BC99-CADB76C4BBAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
