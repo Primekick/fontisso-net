@@ -1,3 +1,4 @@
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core;
@@ -20,6 +21,8 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        I18n.UI.Culture = CultureInfo.CurrentCulture;
+        
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             ViewLocator.Register<MainWindowViewModel, MainWindow>();
