@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.Linq;
 using Fontisso.NET.Helpers;
 using System.Text;
@@ -29,12 +30,15 @@ public class FontService : IFontService
 {
     private readonly Library _freetype;
     private readonly IEnumerable<Uri> _fontUris;
+    private readonly Encoding _systemEncoding;
 
     public FontService()
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         _freetype = new Library();
         _fontUris = AssetLoader.GetAssets(new Uri("avares://Fontisso.NET/Assets/Fonts"), null);
+        _systemEncoding = CodePagesEncodingProvider.Instance.GetEncoding(CultureInfo.CurrentCulture.TextInfo.ANSICodePage)
+                          ?? Encoding.GetEncoding(1250);
     }
 
     [SuppressMessage("Interoperability", "CA1416:Walidacja zgodności z platformą")]
@@ -50,6 +54,7 @@ public class FontService : IFontService
             var gdiBitmap = new System.Drawing.Bitmap(initWidth, height, PixelFormat.Format32bppArgb);
             var cursorX = 4;
             var cursorY = 24;
+                
             using (var graphics = Graphics.FromImage(gdiBitmap))
             {
                 graphics.Clear(backgroundColor);
@@ -58,10 +63,9 @@ public class FontService : IFontService
 
                 foreach (var rune in text)
                 {
-                    // TODO: support other ANSI encodings
                     var convertedRune = Encoding.Convert(
                         Encoding.Unicode,
-                        Encoding.GetEncoding(1250),
+                        _systemEncoding,
                         Encoding.Unicode.GetBytes(new[]
                         {
                             rune
