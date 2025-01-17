@@ -6,6 +6,7 @@
         xmlns:dialogHost="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
         xmlns:models="using:Fontisso.NET.Models"
         xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+        xmlns:i18n="clr-namespace:Fontisso.NET.I18n"
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="640"
         Width="1280" Height="640"
         CanResize="True"
@@ -15,7 +16,7 @@
         Title="Fontisso.NET">
 
     <Design.DataContext>
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
 
     <Window.DataTemplates>
@@ -24,28 +25,28 @@
                 <StackPanel Margin="16" Spacing="16">
                     <TextBlock Text="{Binding Title}"
                                TextAlignment="Left"
-                               Classes="Headline6"></TextBlock>
+                               Classes="Headline6" />
                     <TextBlock Text="{Binding Content}"
-                               TextWrapping="Wrap" 
+                               TextWrapping="Wrap"
                                TextAlignment="Left" />
                     <Button Margin="0 8 0 0"
-                            Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dialogHost:DialogHost}, Path=CloseDialogCommand}">
-                        OK
-                    </Button>
+                            Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dialogHost:DialogHost}, Path=CloseDialogCommand}"
+                            Content="{x:Static i18n:UI.Button_Ok}" />
                 </StackPanel>
             </material:Card>
         </DataTemplate>
     </Window.DataTemplates>
-    
-    <dialogHost:DialogHost CloseOnClickAway="False" Identifier="PatchPopup" DialogMargin="0" CornerRadius="8" Background="Transparent">
+
+    <dialogHost:DialogHost CloseOnClickAway="False" Identifier="PatchPopup" DialogMargin="0" CornerRadius="8"
+                           Background="Transparent">
         <Grid RowDefinitions="*,Auto" ColumnDefinitions="3*,4*,4*">
             <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding FileInput}" />
             <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding FontPicker}" />
             <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding Summary}" />
             <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center"
                     Margin="16 0 16 16"
-                    Content="PATCHUJ"
-                    Command="{Binding ConfirmCommand}"/>
+                    Content="{x:Static i18n:UI.Button_Patch}"
+                    Command="{Binding ConfirmCommand}" />
         </Grid>
     </dialogHost:DialogHost>
 </Window>

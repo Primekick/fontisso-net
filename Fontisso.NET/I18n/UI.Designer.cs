@@ -69,11 +69,92 @@ namespace Fontisso.NET.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Patch.
+        /// </summary>
+        public static string Button_Patch {
+            get {
+                return ResourceManager.GetString("Button_Patch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose file.
+        /// </summary>
+        public static string Button_PickFile {
+            get {
+                return ResourceManager.GetString("Button_PickFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drag and drop a file or use the button below.
+        /// </summary>
+        public static string FileInput_Description {
+            get {
+                return ResourceManager.GetString("FileInput_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drag and drop here.
+        /// </summary>
+        public static string FileInput_DragAndDropHere {
+            get {
+                return ResourceManager.GetString("FileInput_DragAndDropHere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search....
+        /// </summary>
+        public static string FontPicker_SearchPlaceholder {
+            get {
+                return ResourceManager.GetString("FontPicker_SearchPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose file.
+        /// </summary>
+        public static string Header_PickFile {
+            get {
+                return ResourceManager.GetString("Header_PickFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose font.
+        /// </summary>
+        public static string Header_PickFont {
+            get {
+                return ResourceManager.GetString("Header_PickFont", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Summary.
         /// </summary>
         public static string Header_Summary {
             get {
                 return ResourceManager.GetString("Header_Summary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The quick brown fox jumps over the lazy dog.
+        /// </summary>
+        public static string Summary_SampleText {
+            get {
+                return ResourceManager.GetString("Summary_SampleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type any text.
+        /// </summary>
+        public static string TextInput_SampleTextPlaceholder {
+            get {
+                return ResourceManager.GetString("TextInput_SampleTextPlaceholder", resourceCulture);
             }
         }
     }

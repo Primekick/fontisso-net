@@ -5,6 +5,7 @@
              xmlns:vm="using:Fontisso.NET.ViewModels"
              xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              xmlns:icons="using:Material.Icons.Avalonia"
+             xmlns:i18n="clr-namespace:Fontisso.NET.I18n"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="640"
              x:Class="Fontisso.NET.Views.FileInputView"
              x:DataType="vm:FileInputViewModel">
@@ -15,12 +16,12 @@
 
     <material:Card Margin="8">
         <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="16">
-            <TextBlock Text="Wybór pliku"
+            <TextBlock Text="{x:Static i18n:UI.Header_PickFile}"
                        Classes="Headline6"
                        Margin="0,0,0,16" />
 
             <TextBlock Grid.Row="1"
-                       Text="Przeciągnij i upuść plik lub użyj przycisku poniżej"
+                       Text="{x:Static i18n:UI.FileInput_Description}"
                        TextWrapping="Wrap"
                        Classes="Body2"
                        HorizontalAlignment="Left"
@@ -38,7 +39,7 @@
                                             Width="32"
                                             Height="32"
                                             Margin="0,0,0,8" />
-                        <TextBlock Text="Upuść tutaj"
+                        <TextBlock Text="{x:Static i18n:UI.FileInput_DragAndDropHere}"
                                    Classes="Body1" />
                     </StackPanel>
 
@@ -56,7 +57,7 @@
             </material:Card>
 
             <Button Grid.Row="3"
-                    Content="WYBIERZ PLIK"
+                    Content="{x:Static i18n:UI.Button_PickFile}"
                     Classes="Outlined"
                     Command="{Binding SelectFileCommand}"
                     HorizontalAlignment="Center" />

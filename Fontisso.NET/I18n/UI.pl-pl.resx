@@ -17,4 +17,31 @@
     <data name="Header_Summary" xml:space="preserve">
         <value>Podsumowanie</value>
     </data>
+    <data name="Button_Patch" xml:space="preserve">
+        <value>Patchuj</value>
+    </data>
+    <data name="TextInput_SampleTextPlaceholder" xml:space="preserve">
+        <value>Wpisz dowolny tekst</value>
+    </data>
+    <data name="Summary_SampleText" xml:space="preserve">
+        <value>Zażółć gęślą jaźń</value>
+    </data>
+    <data name="Header_PickFile" xml:space="preserve">
+        <value>Wybierz plik</value>
+    </data>
+    <data name="Header_PickFont" xml:space="preserve">
+        <value>Wybierz font</value>
+    </data>
+    <data name="FileInput_Description" xml:space="preserve">
+        <value>Przeciągnij i upuść plik lub użyj przycisku poniżej</value>
+    </data>
+    <data name="FileInput_DragAndDropHere" xml:space="preserve">
+        <value>Upuść tutaj</value>
+    </data>
+    <data name="Button_PickFile" xml:space="preserve">
+        <value>Wybierz plik</value>
+    </data>
+    <data name="FontPicker_SearchPlaceholder" xml:space="preserve">
+        <value>Wyszukaj...</value>
+    </data>
 </root>

@@ -24,4 +24,31 @@
     <data name="Header_Summary" xml:space="preserve">
         <value>Summary</value>
     </data>
+    <data name="Button_Patch" xml:space="preserve">
+        <value>Patch</value>
+    </data>
+    <data name="TextInput_SampleTextPlaceholder" xml:space="preserve">
+        <value>Type any text</value>
+    </data>
+    <data name="Summary_SampleText" xml:space="preserve">
+        <value>The quick brown fox jumps over the lazy dog</value>
+    </data>
+    <data name="Header_PickFile" xml:space="preserve">
+        <value>Choose file</value>
+    </data>
+    <data name="Header_PickFont" xml:space="preserve">
+        <value>Choose font</value>
+    </data>
+    <data name="FileInput_Description" xml:space="preserve">
+        <value>Drag and drop a file or use the button below</value>
+    </data>
+    <data name="Button_PickFile" xml:space="preserve">
+        <value>Choose file</value>
+    </data>
+    <data name="FileInput_DragAndDropHere" xml:space="preserve">
+        <value>Drag and drop here</value>
+    </data>
+    <data name="FontPicker_SearchPlaceholder" xml:space="preserve">
+        <value>Search...</value>
+    </data>
 </root>
