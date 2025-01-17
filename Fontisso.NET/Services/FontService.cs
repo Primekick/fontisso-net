@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -23,7 +24,7 @@ public interface IFontService
     Task<Bitmap> RenderTextToBitmap(string text, byte[] fontData, float fontSize, Color textColor,
         Color backgroundColor, int width);
 
-    Task<IReadOnlyList<FontEntry>> LoadAvailableFonts();
+    Task<ImmutableList<FontEntry>> LoadAvailableFonts();
 }
 
 public class FontService : IFontService
@@ -135,7 +136,7 @@ public class FontService : IFontService
     }
 
 
-    public async Task<IReadOnlyList<FontEntry>> LoadAvailableFonts()
+    public async Task<ImmutableList<FontEntry>> LoadAvailableFonts()
     {
         try
         {
@@ -151,12 +152,12 @@ public class FontService : IFontService
                     GetFontKind(x.Segments[0].TrimEnd('/')),
                     x.Data,
                     x.Segments[1]))
-                .ToList());
+                .ToImmutableList());
         }
         catch (Exception ex)
         {
             // TODO: error handling, assume happy path for now
-            return Array.Empty<FontEntry>();
+            return ImmutableList<FontEntry>.Empty;
         }
     }
 

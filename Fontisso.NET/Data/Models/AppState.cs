@@ -29,7 +29,7 @@ public interface IAppState
 
     Task ProcessFileAsync(string filePath);
     Task LoadFonts();
-    Task GeneratePreviewImage();
+    Task GeneratePreviewImage(FontEntry? fontEntry);
     
     event PropertyChangingEventHandler? PropertyChanging;
     event PropertyChangedEventHandler? PropertyChanged;
@@ -82,15 +82,15 @@ public partial class AppState : ObservableObject, IAppState
         }
     }
 
-    public async Task GeneratePreviewImage()
+    public async Task GeneratePreviewImage(FontEntry? fontEntry)
     {
-        if (string.IsNullOrEmpty(SampleText) || SelectedFont is null)
+        if (string.IsNullOrEmpty(SampleText) || fontEntry is null)
             return;
 
         try
         {
             PreviewImage = await _fontService.RenderTextToBitmap(SampleText,
-                SelectedFont.Data,
+                fontEntry.Data,
                 12.0f,
                 Color.Black,
                 Color.White,

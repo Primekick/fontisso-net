@@ -1,43 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Fontisso.NET.Data;
+using Fontisso.NET.Data.Stores;
 using Fontisso.NET.Models;
 
 namespace Fontisso.NET.ViewModels;
 
-public partial class FontPickerViewModel : ViewModelBase
+public partial class FontPickerViewModel : ViewModelBase, IRecipient<StoreChangedMessage<FontStoreState>>
 {
+    private readonly FontStore _fontStore;
+    
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FilteredFonts))]
     private string _searchText = string.Empty;
     
     [ObservableProperty]
-    private IAppState _state;
+    [NotifyPropertyChangedFor(nameof(FilteredFonts))]
+    private ImmutableList<FontEntry> _fonts = ImmutableList<FontEntry>.Empty;
     
-    public FontPickerViewModel(IAppState state)
+    [ObservableProperty]
+    private FontEntry? _selectedFont;
+    
+    public FontPickerViewModel(FontStore fontStore)
     {
-        State = state;
-        State.PropertyChanged += OnStatePropertyChanged;
+        _fontStore = fontStore;
+        WeakReferenceMessenger.Default.Register(this);
+        LoadFontsCommand.ExecuteAsync(null);
     }
 
-    private void OnStatePropertyChanged(object? sender, PropertyChangedEventArgs args)
+    public void Receive(StoreChangedMessage<FontStoreState> message)
     {
-        if (args.PropertyName == nameof(State.Fonts))
-        {
-            OnPropertyChanged(nameof(FilteredFonts));
-        }
+        Fonts = message.State.Fonts;
     }
 
     public IEnumerable<FontEntry> FilteredFonts =>
-        State.Fonts.Where(f => f.Details.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
+        Fonts.Where(f => f.Details.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
+
+    partial void OnSelectedFontChanged(FontEntry? value)
+    {
+        if (value is not null)
+        { 
+            _fontStore.Dispatch(new SelectFontAction(value));
+        }
+    }
     
     [RelayCommand]
     private async Task LoadFonts()
     {
-        await State.LoadFonts();
+        await _fontStore.Dispatch(new SeedFontsAction());
     }
 }

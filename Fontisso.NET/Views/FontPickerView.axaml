@@ -45,7 +45,7 @@
             <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="16 0 16 16">
                 <ListBox Name="ListBox"
                          ItemsSource="{Binding FilteredFonts}"
-                         SelectedItem="{Binding State.SelectedFont}">
+                         SelectedItem="{Binding SelectedFont}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid ColumnDefinitions="Auto,*">
