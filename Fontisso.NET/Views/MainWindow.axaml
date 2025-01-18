@@ -9,10 +9,9 @@
         xmlns:models="clr-namespace:Fontisso.NET.Data.Models"
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="640"
         Width="1280" Height="640"
-        CanResize="True"
         x:Class="Fontisso.NET.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/fontisso.ico"
         Title="Fontisso.NET">
 
     <Design.DataContext>
