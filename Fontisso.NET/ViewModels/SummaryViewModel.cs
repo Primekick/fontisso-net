@@ -1,11 +1,13 @@
-﻿using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
+﻿using System.Drawing;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Fontisso.NET.Data.Models;
 using Fontisso.NET.Data.Stores;
 using Fontisso.NET.Flux;
+using Fontisso.NET.Helpers;
+using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Fontisso.NET.ViewModels;
 
@@ -18,7 +20,7 @@ public partial class SummaryViewModel : ViewModelBase, IRecipient<StoreChangedMe
 
     [ObservableProperty] private string _previewText = I18n.UI.Summary_SampleText;
 
-    [ObservableProperty] private Bitmap _previewImage;
+    [ObservableProperty] private Bitmap _previewImage = BitmapConverter.CreateBlank(580, 80, Color.White);
 
     public SummaryViewModel(TextPreviewStore textPreviewStore)
     {
@@ -36,8 +38,8 @@ public partial class SummaryViewModel : ViewModelBase, IRecipient<StoreChangedMe
                 PreviewText,
                 SelectedFont.Data,
                 12.0f,
-                System.Drawing.Color.Black,
-                System.Drawing.Color.White
+                Color.Black,
+                Color.White
             ));
         }
     }

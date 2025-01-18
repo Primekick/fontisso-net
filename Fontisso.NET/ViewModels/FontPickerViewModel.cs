@@ -46,7 +46,7 @@ public partial class FontPickerViewModel : ViewModelBase, IRecipient<StoreChange
     {
         if (value is not null)
         { 
-            _fontStore.Dispatch(new SelectFontAction(value));
+            _ = _fontStore.Dispatch(new SelectFontAction(value));
         }
     }
     

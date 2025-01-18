@@ -18,7 +18,7 @@ public partial class FileInputViewModel : ViewModelBase, IRecipient<StoreChanged
 {
     private readonly TargetFileStore _targetFileStore;
 
-    [ObservableProperty] private TargetFileData _fileData;
+    [ObservableProperty] private TargetFileData _fileData = TargetFileData.Default;
 
     public FileInputViewModel(TargetFileStore targetFileStore)
     {

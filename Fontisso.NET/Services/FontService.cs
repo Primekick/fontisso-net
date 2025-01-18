@@ -136,30 +136,20 @@ public class FontService : IFontService
     }
 
 
-    public async Task<ImmutableList<FontEntry>> LoadAvailableFonts()
-    {
-        try
-        {
-            return await Task.Run(() => _fontUris
-                .Select(uri => new
-                {
-                    Uri = uri,
-                    Data = AssetLoader.Open(uri).ReadToByteArray(),
-                    Segments = uri.Segments.TakeLast(2).ToArray()
-                })
-                .Where(x => x.Segments.Length == 2)
-                .Select(x => new FontEntry(
-                    GetFontKind(x.Segments[0].TrimEnd('/')),
-                    x.Data,
-                    x.Segments[1]))
-                .ToImmutableList());
-        }
-        catch (Exception ex)
-        {
-            // TODO: error handling, assume happy path for now
-            return ImmutableList<FontEntry>.Empty;
-        }
-    }
+    public async Task<ImmutableList<FontEntry>> LoadAvailableFonts() =>
+        await Task.Run(() => _fontUris
+            .Select(uri => new
+            {
+                Uri = uri,
+                Data = AssetLoader.Open(uri).ReadToByteArray(),
+                Segments = uri.Segments.TakeLast(2).ToArray()
+            })
+            .Where(x => x.Segments.Length == 2)
+            .Select(x => new FontEntry(
+                GetFontKind(x.Segments[0].TrimEnd('/')),
+                x.Data,
+                x.Segments[1]))
+            .ToImmutableList());
 
     private FontKind GetFontKind(string folderName) => folderName switch
     {

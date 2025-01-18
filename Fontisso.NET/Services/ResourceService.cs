@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Fontisso.NET.Data.Models;
@@ -20,7 +21,6 @@ public interface IResourceService
 {
     Task<Bitmap> ExtractIconFromFile(string filePath);
     Task WriteResource(string filePath, int resourceId, byte[] data);
-    Task<byte[]> ExtractResource(int resourceId);
     Task<OneOf<TargetFileData, ExtractionError>> ExtractTargetFileData(string filePath);
 }
 
@@ -92,6 +92,7 @@ public class ResourceService : IResourceService
     private const int ERROR_NO_MORE_ITEMS = 259;
     private const uint LOAD_LIBRARY_AS_DATAFILE = 0x00000002;
 
+    [SupportedOSPlatform("windows")]
     public async Task<Bitmap> ExtractIconFromFile(string filePath) => await Task.Run(() =>
     {
         var iconHandle = ExtractIcon(IntPtr.Zero, filePath, 0);
@@ -219,11 +220,6 @@ public class ResourceService : IResourceService
         }
     }
 
-    public async Task<byte[]> ExtractResource(int resourceId)
-    {
-        throw new NotImplementedException();
-    }
-
     private OneOf<EngineType, ExtractionError> ExtractEngineVersion(string filePath)
     {
         try
@@ -256,12 +252,13 @@ public class ResourceService : IResourceService
                 (false, false) => EngineType.Vanilla
             };
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return ExtractionError.NotRm2k3;
         }
     }
 
+    [SupportedOSPlatform("windows")]
     public async Task<OneOf<TargetFileData, ExtractionError>> ExtractTargetFileData(string filePath)
     {
         var versionInfo = FileVersionInfo.GetVersionInfo(filePath);

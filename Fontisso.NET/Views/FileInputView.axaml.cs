@@ -16,8 +16,9 @@ public partial class FileInputView : UserControl
         AddHandler(DragDrop.DragOverEvent, DragOver);
     }
 
-    private void DragOver(object sender, DragEventArgs dragEvent)
+    private void DragOver(object? sender, DragEventArgs dragEvent)
     {
+        ArgumentNullException.ThrowIfNull(sender);
         dragEvent.DragEffects &= DragDropEffects.Copy | DragDropEffects.Link;
 
         if (!dragEvent.Data.Contains(DataFormats.Files))
@@ -33,10 +34,10 @@ public partial class FileInputView : UserControl
             return;
         }
         
-        var files = dragEvent.Data.GetFileNames();
-        if (DataContext is FileInputViewModel viewModel)
+        var files = dragEvent.Data.GetFiles();
+        if (DataContext is FileInputViewModel viewModel && files is not null)
         {
-            await viewModel.HandleDroppedFileAsync(files.ToArray());
+            await viewModel.HandleDroppedFileAsync(files.Select(file => file.Path.LocalPath).ToArray());
         }
     }
 }
