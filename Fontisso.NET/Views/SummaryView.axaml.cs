@@ -10,11 +10,11 @@ public partial class SummaryView : UserControl
         InitializeComponent();
     }
     
-    private void PreviewContainer_SizeChanged(object sender, SizeChangedEventArgs e)
+    private async void PreviewContainer_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (DataContext is SummaryViewModel viewModel)
         {
-            viewModel.UpdatePreviewWidth(e.NewSize.Width);
+            await viewModel.UpdatePreviewWidth(e.NewSize.Width);
         }
     }
 }

@@ -1,38 +1,60 @@
-﻿using System.ComponentModel;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Fontisso.NET.Data;
+using Fontisso.NET.Data.Stores;
 using Fontisso.NET.Models;
 
 namespace Fontisso.NET.ViewModels;
 
-public partial class SummaryViewModel : ViewModelBase
+public partial class SummaryViewModel : ViewModelBase, IRecipient<StoreChangedMessage<FontStoreState>>,
+    IRecipient<StoreChangedMessage<TextPreviewState>>
 {
-    [ObservableProperty]
-    private IAppState _state;
+    private readonly TextPreviewStore _textPreviewStore;
 
-    public SummaryViewModel(IAppState state)
-    {
-        State = state;
-        State.PropertyChanged += OnStatePropertyChanged;
-    }
+    private FontEntry? SelectedFont { get; set; }
 
-    private void OnStatePropertyChanged(object? sender, PropertyChangedEventArgs args)
+    [ObservableProperty] private string _previewText = I18n.UI.Summary_SampleText;
+
+    [ObservableProperty] private Bitmap _previewImage;
+
+    public SummaryViewModel(TextPreviewStore textPreviewStore)
     {
-        if (args.PropertyName is nameof(State.SelectedFont) or nameof(State.SampleText))
-        {
-            UpdateSampleTextImageCommand.Execute(null);
-        }
+        _textPreviewStore = textPreviewStore;
+        WeakReferenceMessenger.Default.Register<StoreChangedMessage<FontStoreState>>(this);
+        WeakReferenceMessenger.Default.Register<StoreChangedMessage<TextPreviewState>>(this);
     }
 
     [RelayCommand]
     private async Task UpdateSampleTextImage()
     {
-        await State.GeneratePreviewImage();
+        if (SelectedFont is not null)
+        {
+            await _textPreviewStore.Dispatch(new GeneratePreviewImageAction(
+                PreviewText,
+                SelectedFont.Data,
+                12.0f,
+                System.Drawing.Color.Black,
+                System.Drawing.Color.White
+            ));
+        }
     }
 
-    public void UpdatePreviewWidth(double width)
+    public async Task UpdatePreviewWidth(double width)
     {
-        State.PreviewWidth = width;
+        await _textPreviewStore.Dispatch(new SetPreviewWidthAction(width));
+    }
+
+    public void Receive(StoreChangedMessage<FontStoreState> message)
+    {
+        SelectedFont = message.State.SelectedFont;
+        UpdateSampleTextImageCommand.Execute(null);
+    }
+
+    public void Receive(StoreChangedMessage<TextPreviewState> message)
+    {
+        PreviewImage = message.State.PreviewImage;
     }
 }

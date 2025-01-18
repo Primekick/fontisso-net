@@ -21,7 +21,7 @@
 
             <material:Card Grid.Row="1" Margin="16 8">
                 <TextBox Name="SampleTextBox" 
-                         Text="{Binding State.SampleText}"
+                         Text="{Binding PreviewText}"
                          Watermark="{x:Static i18n:UI.TextInput_SampleTextPlaceholder}"
                          Margin="8">
                     <Interaction.Behaviors>
@@ -37,12 +37,12 @@
                     SizeChanged="PreviewContainer_SizeChanged"
                     CornerRadius="8" ClipToBounds="True">
                 <Panel>
-                    <Image Source="{Binding State.PreviewImage}"
+                    <Image Source="{Binding PreviewImage}"
                            Stretch="UniformToFill" />
                     <Border CornerRadius="8"
                             IsHitTestVisible="False">
                         <Border.Background>
-                            <ImageBrush Source="{Binding State.PreviewImage}"
+                            <ImageBrush Source="{Binding PreviewImage}"
                                         Stretch="UniformToFill" />
                         </Border.Background>
                     </Border>

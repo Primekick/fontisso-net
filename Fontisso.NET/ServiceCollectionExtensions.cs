@@ -14,6 +14,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IAppState, AppState>();
         services.AddSingleton<AppState>();
         services.AddSingleton<FontStore>();
+        services.AddSingleton<TextPreviewStore>();
         return services;
     }
     

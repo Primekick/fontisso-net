@@ -20,19 +20,9 @@ public interface IAppState
 {
     TargetFileData FileData { get; }
     
-    IReadOnlyList<FontEntry> Fonts { get; }
     FontEntry? SelectedFont { get; set; }
-    
-    string SampleText { get; set; }
-    double PreviewWidth { get; set; }
-    Bitmap PreviewImage { get; }
 
     Task ProcessFileAsync(string filePath);
-    Task LoadFonts();
-    Task GeneratePreviewImage(FontEntry? fontEntry);
-    
-    event PropertyChangingEventHandler? PropertyChanging;
-    event PropertyChangedEventHandler? PropertyChanged;
 }
 
 public partial class AppState : ObservableObject, IAppState
@@ -63,38 +53,6 @@ public partial class AppState : ObservableObject, IAppState
             {
                 FileData = targetFileData.AsT0;
             }
-        }
-        catch (Exception ex)
-        {
-            // TODO: error handling
-        }
-    }
-
-    public async Task LoadFonts()
-    {
-        try
-        {
-            Fonts = await _fontService.LoadAvailableFonts();
-        }
-        catch (Exception ex)
-        {
-            // TODO: error handling
-        }
-    }
-
-    public async Task GeneratePreviewImage(FontEntry? fontEntry)
-    {
-        if (string.IsNullOrEmpty(SampleText) || fontEntry is null)
-            return;
-
-        try
-        {
-            PreviewImage = await _fontService.RenderTextToBitmap(SampleText,
-                fontEntry.Data,
-                12.0f,
-                Color.Black,
-                Color.White,
-                (int)PreviewWidth);
         }
         catch (Exception ex)
         {
