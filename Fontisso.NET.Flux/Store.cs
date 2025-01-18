@@ -10,6 +10,7 @@ public abstract class Store<TState> where TState : class
     protected Store(TState initialState)
     {
         _state = initialState;
+        WeakReferenceMessenger.Default.Send(new StoreChangedMessage<TState>(_state));
     }
 
     protected void SetState(Func<TState, TState> updateFunc)
