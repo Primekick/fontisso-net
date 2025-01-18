@@ -42,8 +42,7 @@
             <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding FileInput}" />
             <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding FontPicker}" />
             <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding Summary}" />
-            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center"
-                    Margin="16 0 16 16"
+            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0 0 0 8"
                     Content="{x:Static i18n:UI.Button_Patch}"
                     Command="{Binding PatchCommand}" />
         </Grid>
