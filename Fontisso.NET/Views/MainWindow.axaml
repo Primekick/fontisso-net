@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:dialogHost="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
-        xmlns:models="using:Fontisso.NET.Models"
         xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
         xmlns:i18n="clr-namespace:Fontisso.NET.I18n"
+        xmlns:models="clr-namespace:Fontisso.NET.Data.Models"
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="640"
         Width="1280" Height="640"
         CanResize="True"
@@ -20,7 +20,7 @@
     </Design.DataContext>
 
     <Window.DataTemplates>
-        <DataTemplate DataType="models:PatchingResult">
+        <DataTemplate DataType="models:OperationResult">
             <material:Card Margin="0">
                 <StackPanel Margin="16" Spacing="16">
                     <TextBlock Text="{Binding Title}"

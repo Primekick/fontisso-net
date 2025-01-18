@@ -87,6 +87,60 @@ namespace Fontisso.NET.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Dialog_Error {
+            get {
+                return ResourceManager.GetString("Dialog_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info.
+        /// </summary>
+        public static string Dialog_Info {
+            get {
+                return ResourceManager.GetString("Dialog_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot create backup.
+        /// </summary>
+        public static string Error_CannotCreateBackup {
+            get {
+                return ResourceManager.GetString("Error_CannotCreateBackup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot patch file: {}.
+        /// </summary>
+        public static string Error_CannotPatch {
+            get {
+                return ResourceManager.GetString("Error_CannotPatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot patch file (code {}): {}.
+        /// </summary>
+        public static string Error_CannotPatchWin32 {
+            get {
+                return ResourceManager.GetString("Error_CannotPatchWin32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File not found: {}.
+        /// </summary>
+        public static string Error_FileNotFound {
+            get {
+                return ResourceManager.GetString("Error_FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drag and drop a file or use the button below.
         /// </summary>
         public static string FileInput_Description {
@@ -137,6 +191,15 @@ namespace Fontisso.NET.I18n {
         public static string Header_Summary {
             get {
                 return ResourceManager.GetString("Header_Summary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File patched successfully! Created backup: {}.
+        /// </summary>
+        public static string Success_Patched {
+            get {
+                return ResourceManager.GetString("Success_Patched", resourceCulture);
             }
         }
         

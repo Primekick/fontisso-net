@@ -1,15 +1,15 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Net;
 using System.Threading.Tasks;
+using Fontisso.NET.Data.Models;
 using Fontisso.NET.Models;
 
 namespace Fontisso.NET.Services;
 
 public interface IPatchingService
 {
-    Task<PatchingResult> PatchExecutable(TargetFileData tfd, byte[] fontData);
+    Task<OperationResult> PatchExecutable(TargetFileData tfd, byte[] fontData);
 }
 
 public class PatchingService : IPatchingService
@@ -21,21 +21,21 @@ public class PatchingService : IPatchingService
         _resourceService = resourceService;
     }
 
-    public async Task<PatchingResult> PatchExecutable(TargetFileData tfd, byte[] fontData)
+    public async Task<OperationResult> PatchExecutable(TargetFileData tfd, byte[] fontData)
     {
         if (!File.Exists(tfd.TargetFilePath))
         {
-            return PatchingResult.ErrorResult($"Plik {tfd.FileName} nie istnieje.");
+            return OperationResult.ErrorResult(string.Format(I18n.UI.Error_FileNotFound, tfd.FileName));
         }
 
-        var backupFilePath = $"{tfd.TargetFilePath}_{DateTime.Now:yyyyMMdd_HHmmss}.old";
+        var backupFilePath = $"{tfd.TargetFilePath}.{DateTime.Now:yyyyMMdd_HHmmss}.old";
         try
         {
             File.Copy(tfd.TargetFilePath, backupFilePath);
         }
         catch
         {
-            return PatchingResult.ErrorResult($"Nie można stworzyć kopii zapasowej: {backupFilePath}");
+            return OperationResult.ErrorResult(string.Format(I18n.UI.Error_CannotCreateBackup, backupFilePath));
         }
 
         try
@@ -48,11 +48,11 @@ public class PatchingService : IPatchingService
             File.Replace(backupFilePath, tfd.TargetFilePath, null);
             return e switch
             {
-                Win32Exception w32e => PatchingResult.ErrorResult($"Nie można spatchować pliku (kod {w32e.NativeErrorCode}): {w32e.Message}"),
-                _ => PatchingResult.ErrorResult($"Nie można spatchować pliku: {e.Message}"),
+                Win32Exception w32e => OperationResult.ErrorResult(string.Format(I18n.UI.Error_CannotPatchWin32, w32e.NativeErrorCode, w32e.Message)),
+                _ => OperationResult.ErrorResult(string.Format(I18n.UI.Error_CannotPatch, e.Message)),
             };
         }
         
-        return PatchingResult.OkResult($"Spatchowano pomyślnie! Utworzono backup: {Path.GetFileName(backupFilePath)}");
+        return OperationResult.OkResult(string.Format(I18n.UI.Success_Patched, Path.GetFileName(backupFilePath)));
     }
 }
