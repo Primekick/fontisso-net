@@ -51,18 +51,27 @@
         <value>Błąd</value>
     </data>
     <data name="Success_Patched" xml:space="preserve">
-        <value>Plik spatchowany pomyślnie! Utworzono kopię zapasową: {}</value>
+        <value>Plik spatchowany pomyślnie! Utworzono kopię zapasową: {0}</value>
     </data>
     <data name="Error_CannotPatch" xml:space="preserve">
-        <value>Nie można spatchować pliku: {}</value>
+        <value>Nie można spatchować pliku: {0}</value>
     </data>
     <data name="Error_CannotPatchWin32" xml:space="preserve">
-        <value>Nie można spatchować pliku (kod {}): {}</value>
+        <value>Nie można spatchować pliku (kod {0}): {1}</value>
     </data>
     <data name="Error_CannotCreateBackup" xml:space="preserve">
         <value>Nie można stworzyć kopii zapasowej</value>
     </data>
     <data name="Error_FileNotFound" xml:space="preserve">
-        <value>Nie można znaleźć pliku: {}</value>
+        <value>Nie można znaleźć pliku: {0}</value>
+    </data>
+    <data name="Error_Unhandled" xml:space="preserve">
+        <value>Wystąpił niespodziewany błąd: {0}</value>
+    </data>
+    <data name="Error_Not2k3File" xml:space="preserve">
+        <value>Niepoprawny format pliku. Oczekiwano RPG_RT.exe lub ultimate_rt_eb.dll</value>
+    </data>
+    <data name="Error_EngineTooOld" xml:space="preserve">
+        <value>Wersja silnika jest zbyt stara, aby umożliwić patchowanie. Tylko wersje 1.12 i wyższe są wspierane.</value>
     </data>
 </root>

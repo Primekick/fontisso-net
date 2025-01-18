@@ -114,7 +114,7 @@ namespace Fontisso.NET.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot patch file: {}.
+        ///   Looks up a localized string similar to Cannot patch file: {0}.
         /// </summary>
         public static string Error_CannotPatch {
             get {
@@ -123,7 +123,7 @@ namespace Fontisso.NET.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot patch file (code {}): {}.
+        ///   Looks up a localized string similar to Cannot patch file (code {0}): {1}.
         /// </summary>
         public static string Error_CannotPatchWin32 {
             get {
@@ -132,11 +132,38 @@ namespace Fontisso.NET.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File not found: {}.
+        ///   Looks up a localized string similar to Engine too old to be patched. Only versions 1.12 and up are supported..
+        /// </summary>
+        public static string Error_EngineTooOld {
+            get {
+                return ResourceManager.GetString("Error_EngineTooOld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File not found: {0}.
         /// </summary>
         public static string Error_FileNotFound {
             get {
                 return ResourceManager.GetString("Error_FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsupported file format. Expected either RPG_RT.exe or ultimate_rt_eb.dll.
+        /// </summary>
+        public static string Error_Not2k3File {
+            get {
+                return ResourceManager.GetString("Error_Not2k3File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An unexpected exception occurred: {0}.
+        /// </summary>
+        public static string Error_Unhandled {
+            get {
+                return ResourceManager.GetString("Error_Unhandled", resourceCulture);
             }
         }
         
@@ -195,7 +222,7 @@ namespace Fontisso.NET.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File patched successfully! Created backup: {}.
+        ///   Looks up a localized string similar to File patched successfully! Created backup: {0}.
         /// </summary>
         public static string Success_Patched {
             get {
