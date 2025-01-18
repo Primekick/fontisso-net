@@ -1,5 +1,5 @@
 ﻿using Fontisso.NET.Data.Stores;
-using Fontisso.NET.Models;
+using Fontisso.NET.Data.Models;
 using Fontisso.NET.Services;
 using Fontisso.NET.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +15,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<AppState>();
         services.AddSingleton<FontStore>();
         services.AddSingleton<TextPreviewStore>();
+        services.AddSingleton<TargetFileStore>();
         return services;
     }
     

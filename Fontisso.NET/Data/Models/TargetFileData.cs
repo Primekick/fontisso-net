@@ -2,12 +2,10 @@
 
 namespace Fontisso.NET.Data.Models;
 
-public enum FileError
+public enum ExtractionError
 {
-    Unknown,
     NotRm2k3,
     EngineTooOld,
-    InsufficientPermissions,
 }
 
 public enum EngineType

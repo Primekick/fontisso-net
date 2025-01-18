@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DialogHostAvalonia;
-using Fontisso.NET.Models;
+using Fontisso.NET.Data.Models;
 using Fontisso.NET.Services;
 
 namespace Fontisso.NET.ViewModels;
