@@ -1,7 +1,6 @@
-﻿using System;
-using Avalonia.Media.Imaging;
+﻿using Avalonia.Media.Imaging;
 
-namespace Fontisso.NET.Models;
+namespace Fontisso.NET.Data.Models;
 
 public enum FileError
 {

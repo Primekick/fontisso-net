@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 
-namespace Fontisso.NET.Data;
+namespace Fontisso.NET.Flux;
 
 public abstract class Store<TState> where TState : class 
 {

@@ -11,7 +11,7 @@ using Fontisso.NET.Helpers;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Platform;
-using Fontisso.NET.Models;
+using Fontisso.NET.Data.Models;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 using SharpFont;
 using Encoding = System.Text.Encoding;

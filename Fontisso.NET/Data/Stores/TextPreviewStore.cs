@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Threading.Tasks;
+using Fontisso.NET.Flux;
 using Fontisso.NET.Helpers;
 using Fontisso.NET.Services;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;

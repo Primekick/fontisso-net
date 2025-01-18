@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Fontisso.NET.Data;
+using Fontisso.NET.Data.Models;
 using Fontisso.NET.Data.Stores;
-using Fontisso.NET.Models;
+using Fontisso.NET.Flux;
 
 namespace Fontisso.NET.ViewModels;
 

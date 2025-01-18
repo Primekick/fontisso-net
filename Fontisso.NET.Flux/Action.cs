@@ -1,3 +1,3 @@
-﻿namespace Fontisso.NET.Data;
+﻿namespace Fontisso.NET.Flux;
 
 public interface IAction {}

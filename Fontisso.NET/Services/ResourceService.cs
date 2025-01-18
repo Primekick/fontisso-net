@@ -9,8 +9,8 @@ using System.Reflection.PortableExecutable;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Fontisso.NET.Data.Models;
 using Fontisso.NET.Helpers;
-using Fontisso.NET.Models;
 using OneOf;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 

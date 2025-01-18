@@ -1,4 +1,4 @@
-﻿namespace Fontisso.NET.Models;
+﻿namespace Fontisso.NET.Data.Models;
 
 public enum FontKind
 {
