@@ -45,7 +45,7 @@
             <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center"
                     Margin="16 0 16 16"
                     Content="{x:Static i18n:UI.Button_Patch}"
-                    Command="{Binding ConfirmCommand}" />
+                    Command="{Binding PatchCommand}" />
         </Grid>
     </dialogHost:DialogHost>
 </Window>

@@ -1,35 +1,60 @@
 ﻿using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using DialogHostAvalonia;
 using Fontisso.NET.Data.Models;
+using Fontisso.NET.Data.Stores;
+using Fontisso.NET.Flux;
 using Fontisso.NET.Services;
+using OneOf;
 
 namespace Fontisso.NET.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase
+public partial class MainWindowViewModel : ViewModelBase, IRecipient<StoreChangedMessage<TargetFileState>>,
+    IRecipient<StoreChangedMessage<FontStoreState>>
 {
-    [ObservableProperty] private IAppState _state;
     [ObservableProperty] private FileInputViewModel _fileInput;
     [ObservableProperty] private FontPickerViewModel _fontPicker;
     [ObservableProperty] private SummaryViewModel _summary;
 
+    [ObservableProperty] 
+    [NotifyCanExecuteChangedFor(nameof(PatchCommand))]
+    private FontEntry? _selectedFont;
+    
+    [ObservableProperty] 
+    [NotifyCanExecuteChangedFor(nameof(PatchCommand))]
+    private OneOf<TargetFileData, ExtractionError> _fileData;
+
     private readonly IPatchingService _patchingService;
 
-    public MainWindowViewModel(IAppState state, FileInputViewModel fileInput, FontPickerViewModel fontPicker, SummaryViewModel summary,
+    public MainWindowViewModel(FileInputViewModel fileInput, FontPickerViewModel fontPicker, SummaryViewModel summary,
         IPatchingService patchingService)
     {
-        State = state;
+        _patchingService = patchingService;
         FileInput = fileInput;
         FontPicker = fontPicker;
         Summary = summary;
-        _patchingService = patchingService;
+        WeakReferenceMessenger.Default.Register<StoreChangedMessage<TargetFileState>>(this);
+        WeakReferenceMessenger.Default.Register<StoreChangedMessage<FontStoreState>>(this);
+    }
+    
+    private bool CanPatch() => SelectedFont is not null && FileData.IsT0 && FileData.AsT0.HasFile;
+
+    [RelayCommand(CanExecute = nameof(CanPatch))]
+    private async Task Patch()
+    {
+        var patchingResult = await _patchingService.PatchExecutable(FileData.AsT0, SelectedFont!.Data);
+        await DialogHost.Show(patchingResult);
     }
 
-    [RelayCommand]
-    private async Task Confirm()
+    public void Receive(StoreChangedMessage<TargetFileState> message)
     {
-        var patchingResult = await _patchingService.PatchExecutable(State.FileData, State.SelectedFont.Data);
-        await DialogHost.Show(patchingResult);
+        FileData = message.State.FileData;
+    }
+
+    public void Receive(StoreChangedMessage<FontStoreState> message)
+    {
+        SelectedFont = message.State.SelectedFont;
     }
 }

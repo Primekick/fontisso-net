@@ -36,7 +36,7 @@ public partial class App : Application
             
             var services = new ServiceCollection();
             services.AddFontissoServices()
-                .AddState()
+                .AddDataStores()
                 .AddFontissoViewModels();
             
             var provider = services.BuildServiceProvider();
