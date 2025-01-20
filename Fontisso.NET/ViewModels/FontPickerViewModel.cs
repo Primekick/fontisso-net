@@ -15,18 +15,18 @@ namespace Fontisso.NET.ViewModels;
 public partial class FontPickerViewModel : ViewModelBase, IRecipient<StoreChangedMessage<FontStoreState>>
 {
     private readonly FontStore _fontStore;
-    
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FilteredFonts))]
     private string _searchText = string.Empty;
-    
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FilteredFonts))]
     private ImmutableList<FontEntry> _fonts = ImmutableList<FontEntry>.Empty;
-    
+
     [ObservableProperty]
     private FontEntry? _selectedFont;
-    
+
     public FontPickerViewModel(FontStore fontStore)
     {
         _fontStore = fontStore;
@@ -40,16 +40,18 @@ public partial class FontPickerViewModel : ViewModelBase, IRecipient<StoreChange
     }
 
     public IEnumerable<FontEntry> FilteredFonts =>
-        Fonts.Where(f => f.Details.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
+        Fonts.Where(f =>
+            f.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+            f.Attribution.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
 
     partial void OnSelectedFontChanged(FontEntry? value)
     {
         if (value is not null)
-        { 
+        {
             _ = _fontStore.Dispatch(new SelectFontAction(value));
         }
     }
-    
+
     [RelayCommand]
     private async Task LoadFonts()
     {

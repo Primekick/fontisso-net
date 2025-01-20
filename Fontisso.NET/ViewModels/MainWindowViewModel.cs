@@ -44,7 +44,7 @@ public partial class MainWindowViewModel : ViewModelBase, IRecipient<StoreChange
     [RelayCommand(CanExecute = nameof(CanPatch))]
     private async Task Patch()
     {
-        var patchingResult = await _patchingService.PatchExecutable(FileData.AsT0, SelectedFont!.Data);
+        var patchingResult = _patchingService.PatchExecutable(FileData.AsT0, SelectedFont!.Rpg2000Data, SelectedFont!.Rpg2000GData);
         await DialogHost.Show(patchingResult);
     }
 

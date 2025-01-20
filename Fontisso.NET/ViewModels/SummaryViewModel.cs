@@ -36,7 +36,7 @@ public partial class SummaryViewModel : ViewModelBase, IRecipient<StoreChangedMe
         {
             await _textPreviewStore.Dispatch(new GeneratePreviewImageAction(
                 PreviewText,
-                SelectedFont.Data,
+                SelectedFont.Rpg2000Data,
                 12.0f,
                 Color.Black,
                 Color.White

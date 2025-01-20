@@ -20,11 +20,11 @@ namespace Fontisso.NET.Services;
 public interface IResourceService
 {
     Task<Bitmap> ExtractIconFromFile(string filePath);
-    Task WriteResource(string filePath, int resourceId, byte[] data);
+    void WriteResources(string filePath, ICollection<(FontKind kind, ReadOnlyMemory<byte> data)> resources);
     Task<OneOf<TargetFileData, ExtractionError>> ExtractTargetFileData(string filePath);
 }
 
-public class ResourceService : IResourceService
+public partial class ResourceService : IResourceService
 {
     private static readonly Regex VERSION_REGEX = new(@"1.([01]).(\d{1,2}).\d{1,2}", RegexOptions.Compiled);
 
@@ -59,8 +59,9 @@ public class ResourceService : IResourceService
     [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
     private static extern IntPtr BeginUpdateResource(string pFileName, bool bDeleteExistingResources);
 
-    [DllImport("kernel32.dll", SetLastError = true)]
-    private static extern bool UpdateResource(IntPtr hUpdate, int lpType, int lpName, ushort wLanguage, byte[]? lpData, uint cbData);
+    [LibraryImport("kernel32.dll", EntryPoint = "UpdateResourceW", StringMarshalling = StringMarshalling.Utf8, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool UpdateResource(IntPtr hUpdate, int lpType, int lpName, ushort wLanguage, ReadOnlySpan<byte> lpData, uint cbData);
 
     [DllImport("kernel32.dll", SetLastError = true)]
     private static extern bool EndUpdateResource(IntPtr hUpdate, bool fDiscard);
@@ -120,7 +121,7 @@ public class ResourceService : IResourceService
         }
     });
 
-    public async Task WriteResource(string filePath, int resourceId, byte[] data) => await Task.Run(() =>
+    public void WriteResources(string filePath, ICollection<(FontKind kind, ReadOnlyMemory<byte> data)> resources)
     {
         var libHandle = LoadLibraryEx(filePath, IntPtr.Zero, LOAD_LIBRARY_AS_DATAFILE);
         if (libHandle == IntPtr.Zero)
@@ -144,10 +145,14 @@ public class ResourceService : IResourceService
             }
         }
 
-        var result = UpdateResource(updateHandle, RT_RCDATA, resourceId, 1033, data, (uint)data.Length);
-        if (!result)
+        bool result;
+        foreach (var resource in resources)
         {
-            throw new Win32Exception(Marshal.GetLastWin32Error(), "UpdateResource failed.");
+            result = UpdateResource(updateHandle, RT_RCDATA, (int)resource.kind, 1033, resource.data.Span, (uint)resource.data.Length);
+            if (!result)
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "UpdateResource failed.");
+            }
         }
 
         result = EndUpdateResource(updateHandle, false);
@@ -155,7 +160,7 @@ public class ResourceService : IResourceService
         {
             throw new Win32Exception(Marshal.GetLastWin32Error(), "EndUpdateResource failed.");
         }
-    });
+    }
 
     private ICollection<(IntPtr Name, ushort Language)> GetResourcesToRemove(IntPtr libHandle)
     {

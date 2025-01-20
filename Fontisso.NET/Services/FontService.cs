@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -134,27 +135,82 @@ public class FontService : IFontService
 
         return newBitmap;
     }
-
-
+    
     public async Task<ImmutableList<FontEntry>> LoadAvailableFonts() =>
         await Task.Run(() => _fontUris
-            .Select(uri => new
-            {
-                Uri = uri,
-                Data = AssetLoader.Open(uri).ReadToByteArray(),
-                Segments = uri.Segments.TakeLast(2).ToArray()
-            })
-            .Where(x => x.Segments.Length == 2)
-            .Select(x => new FontEntry(
-                GetFontKind(x.Segments[0].TrimEnd('/')),
-                x.Data,
-                x.Segments[1]))
+            .Select(uri => AssetLoader.Open(uri).ReadToByteArray())
+            .Select(data => new FontEntry(
+                ExtractModuleName(data),
+                ExtractAttribution(data),
+                SetFaceNameByFontKind(data, FontKind.RPG2000),
+                SetFaceNameByFontKind(data, FontKind.RPG2000G)
+                ))
             .ToImmutableList());
 
-    private FontKind GetFontKind(string folderName) => folderName switch
+    private byte[] SetFaceNameByFontKind(byte[] data, FontKind kind)
     {
-        "RPG2000" => FontKind.RPG2000,
-        "RPG2000G" => FontKind.RPG2000G,
-        _ => throw new InvalidOperationException($"Unknown font kind: {folderName}")
-    };
+        var newName = kind switch
+        {
+            FontKind.RPG2000 => "RPG2000",
+            FontKind.RPG2000G => "RPG2000G",
+            _ => throw new UnreachableException()
+        };
+        var newData = (byte[])data.Clone();
+        var dataSpan = newData.AsSpan();
+        
+        var fontDirOffset = ExtractOffsetToResourceDirectoryEntry(dataSpan, 0x8007);
+        // FONTGROUPHDR size + szFaceName offset (assuming szDeviceName is null)
+        var fontDirEntryFaceNameOffset = fontDirOffset + 0x4 + 0x72;
+        var targetSpan = dataSpan.Slice(fontDirEntryFaceNameOffset, newName.Length + 1);
+        targetSpan.Clear();
+        Encoding.ASCII.GetBytes(newName).AsSpan().CopyTo(targetSpan);
+        
+        return newData;
+    }
+    
+    
+    private string ExtractAttribution(ReadOnlySpan<byte> data) =>
+        ExtractOffsetToResourceDirectoryEntry(data, 0x8008) switch
+        {
+            0 => "---",
+            // copyright section is a static 60-char array
+            var offsetToFont => Encoding.ASCII.GetString(data.Slice(offsetToFont + 0x6, 60)).Trim() 
+        };
+    
+    private int ExtractOffsetToResourceDirectoryEntry(ReadOnlySpan<byte> data, ushort typeId)
+    {
+        var resourceTableOffset = ExtractOffsetFromNeHeader(data, 0x24);
+        // represents the amounts of bits to shift to the left to obtain the real resource offset later
+        var shift = BitConverter.ToUInt16(data.Slice(resourceTableOffset));
+        
+        var tablePointer = resourceTableOffset + 0x2;
+        var resourceTypeId = BitConverter.ToUInt16(data.Slice(tablePointer));
+        while (resourceTypeId > 0)
+        {
+            if (resourceTypeId == typeId)
+            {
+                // this offset is relative to beginning of file
+                return BitConverter.ToUInt16(data.Slice(tablePointer + 0x8)) << shift;
+            }
+            // ResourceTableEntry size + number of entries * ResourceEntry size
+            tablePointer += 0x8 + BitConverter.ToUInt16(data.Slice(tablePointer + 0x2)) * 0xC;
+            resourceTypeId = BitConverter.ToUInt16(data.Slice(tablePointer));
+        }
+
+        return 0;
+    }
+    
+    private string ExtractModuleName(ReadOnlySpan<byte> data)
+    {
+        var residentNameTableOffset = ExtractOffsetFromNeHeader(data, 0x26);
+        // first byte = length of the name, first entry in the table = module name, 
+        var nameLength = data[residentNameTableOffset];
+        return Encoding.ASCII.GetString(data.Slice(residentNameTableOffset + 0x1, nameLength));
+    }
+
+    private int ExtractOffsetFromNeHeader(ReadOnlySpan<byte> data, int offset)
+    {
+        var neHeaderOffset = BitConverter.ToInt32(data.Slice(0x3C));
+        return neHeaderOffset + BitConverter.ToUInt16(data.Slice(neHeaderOffset + offset));
+    }
 }
