@@ -8,6 +8,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Versioning;
 using Fontisso.NET.Helpers;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,7 +44,7 @@ public class FontService : IFontService
                           ?? Encoding.GetEncoding(1250);
     }
 
-    [SuppressMessage("Interoperability", "CA1416:Walidacja zgodności z platformą")]
+    [SupportedOSPlatform("windows")]
     public async Task<Bitmap> RenderTextToBitmap(string text, byte[] fontData, float fontSize, Color textColor,
         Color backgroundColor, int width) =>
         await Task.Run(() =>
@@ -68,10 +69,7 @@ public class FontService : IFontService
                     var convertedRune = Encoding.Convert(
                         Encoding.Unicode,
                         _systemEncoding,
-                        Encoding.Unicode.GetBytes(new[]
-                        {
-                            rune
-                        }));
+                        Encoding.Unicode.GetBytes([ rune ]));
                     var glyphIndex = face.GetCharIndex(convertedRune[0]);
                     face.LoadGlyph(glyphIndex, LoadFlags.Default, LoadTarget.Normal);
                     face.Glyph.RenderGlyph(RenderMode.Normal);
@@ -116,7 +114,7 @@ public class FontService : IFontService
         });
 
 
-    [SuppressMessage("Interoperability", "CA1416:Walidacja zgodności z platformą")]
+    [SupportedOSPlatform("windows")]
     private static System.Drawing.Bitmap ScaleBitmap(System.Drawing.Bitmap sourceBitmap, float scaleFactor)
     {
         var newWidth = (int)(sourceBitmap.Width * scaleFactor);
@@ -144,7 +142,7 @@ public class FontService : IFontService
                 ExtractAttribution(data),
                 SetFaceNameByFontKind(data, FontKind.RPG2000),
                 SetFaceNameByFontKind(data, FontKind.RPG2000G)
-                ))
+            ))
             .ToImmutableList());
 
     private byte[] SetFaceNameByFontKind(byte[] data, FontKind kind)
