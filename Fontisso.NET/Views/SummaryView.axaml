@@ -13,7 +13,7 @@
         <vm:SummaryViewModel />
     </Design.DataContext>
 
-    <material:Card Margin="8">
+    <material:Card Margin="0">
         <Grid RowDefinitions="Auto,Auto,*">
             <TextBlock Text="{x:Static i18n:UI.Header_Summary}"
                        Classes="Headline6"

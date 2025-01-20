@@ -7,8 +7,9 @@
         xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
         xmlns:i18n="clr-namespace:Fontisso.NET.I18n"
         xmlns:models="clr-namespace:Fontisso.NET.Data.Models"
-        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="640"
-        Width="1280" Height="640"
+        mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="640"
+        Width="960" Height="640"
+        CanResize="false"
         x:Class="Fontisso.NET.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/fontisso.ico"
@@ -38,11 +39,13 @@
 
     <dialogHost:DialogHost CloseOnClickAway="False" Identifier="PatchPopup" DialogMargin="0" CornerRadius="8"
                            Background="Transparent">
-        <Grid RowDefinitions="*,Auto" ColumnDefinitions="3*,4*,4*">
-            <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding FileInput}" />
-            <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding FontPicker}" />
-            <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding Summary}" />
-            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0 0 0 8"
+        <Grid RowDefinitions="*,Auto" ColumnDefinitions="3*,3*" Margin="8">
+            <Grid RowDefinitions="*,*" ColumnDefinitions="*" Grid.Row="0" Grid.Column="0" Margin="0 0 8 8" >
+                <ContentControl Grid.Row="0" Content="{Binding FileInput}" Margin="0 0 0 8"/>
+                <ContentControl Grid.Row="1" Content="{Binding Summary}" />
+            </Grid>
+            <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding FontPicker}" Margin="0 0 0 8"/>
+            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center"
                     Content="{x:Static i18n:UI.Button_Patch}"
                     Command="{Binding PatchCommand}" />
         </Grid>
