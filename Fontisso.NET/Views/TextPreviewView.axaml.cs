@@ -3,16 +3,16 @@ using Fontisso.NET.ViewModels;
 
 namespace Fontisso.NET.Views;
 
-public partial class SummaryView : UserControl
+public partial class TextPreviewView : UserControl
 {
-    public SummaryView()
+    public TextPreviewView()
     {
         InitializeComponent();
     }
     
     private async void PreviewContainer_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (DataContext is SummaryViewModel viewModel)
+        if (DataContext is TextPreviewViewModel viewModel)
         {
             await viewModel.UpdatePreviewWidth(e.NewSize.Width);
         }

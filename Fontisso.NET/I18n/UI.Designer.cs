@@ -213,11 +213,11 @@ namespace Fontisso.NET.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Summary.
+        ///   Looks up a localized string similar to Preview.
         /// </summary>
-        public static string Header_Summary {
+        public static string Header_Preview {
             get {
-                return ResourceManager.GetString("Header_Summary", resourceCulture);
+                return ResourceManager.GetString("Header_Preview", resourceCulture);
             }
         }
         

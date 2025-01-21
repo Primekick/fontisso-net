@@ -6,16 +6,16 @@
              xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              xmlns:i18n="clr-namespace:Fontisso.NET.I18n"
              mc:Ignorable="d" d:DesignWidth="660" d:DesignHeight="640"
-             x:Class="Fontisso.NET.Views.SummaryView"
-             x:DataType="vm:SummaryViewModel">
+             x:Class="Fontisso.NET.Views.TextPreviewView"
+             x:DataType="vm:TextPreviewViewModel">
 
     <Design.DataContext>
-        <vm:SummaryViewModel />
+        <vm:TextPreviewViewModel />
     </Design.DataContext>
 
     <material:Card Margin="0">
         <Grid RowDefinitions="Auto,Auto,*">
-            <TextBlock Text="{x:Static i18n:UI.Header_Summary}"
+            <TextBlock Text="{x:Static i18n:UI.Header_Preview}"
                        Classes="Headline6"
                        Margin="16 16 16 8" />
 

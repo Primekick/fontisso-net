@@ -28,7 +28,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<FileInputViewModel>()
             .AddSingleton<FontPickerViewModel>()
-            .AddSingleton<SummaryViewModel>()
+            .AddSingleton<TextPreviewViewModel>()
             .AddSingleton<MainWindowViewModel>();
         return services;
     }

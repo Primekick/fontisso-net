@@ -21,8 +21,8 @@
     <data name="Button_Ok" xml:space="preserve">
         <value>Ok</value>
     </data>
-    <data name="Header_Summary" xml:space="preserve">
-        <value>Summary</value>
+    <data name="Header_Preview" xml:space="preserve">
+        <value>Preview</value>
     </data>
     <data name="Button_Patch" xml:space="preserve">
         <value>Patch</value>

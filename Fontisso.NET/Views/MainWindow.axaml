@@ -42,7 +42,7 @@
         <Grid RowDefinitions="*,Auto" ColumnDefinitions="3*,3*" Margin="8">
             <Grid RowDefinitions="*,*" ColumnDefinitions="*" Grid.Row="0" Grid.Column="0" Margin="0 0 8 8" >
                 <ContentControl Grid.Row="0" Content="{Binding FileInput}" Margin="0 0 0 8"/>
-                <ContentControl Grid.Row="1" Content="{Binding Summary}" />
+                <ContentControl Grid.Row="1" Content="{Binding TextPreview}" />
             </Grid>
             <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding FontPicker}" Margin="0 0 0 8"/>
             <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center"

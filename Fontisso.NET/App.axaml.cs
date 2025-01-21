@@ -28,7 +28,7 @@ public partial class App : Application
             ViewLocator.Register<MainWindowViewModel, MainWindow>();
             ViewLocator.Register<FileInputViewModel, FileInputView>();
             ViewLocator.Register<FontPickerViewModel, FontPickerView>();
-            ViewLocator.Register<SummaryViewModel, SummaryView>();
+            ViewLocator.Register<TextPreviewViewModel, TextPreviewView>();
             
             // Line below is needed to remove Avalonia data validation.
             // Without this line you will get duplicate validations from both Avalonia and CT

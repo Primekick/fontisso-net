@@ -16,7 +16,7 @@ public partial class MainWindowViewModel : ViewModelBase, IRecipient<StoreChange
 {
     [ObservableProperty] private FileInputViewModel _fileInput;
     [ObservableProperty] private FontPickerViewModel _fontPicker;
-    [ObservableProperty] private SummaryViewModel _summary;
+    [ObservableProperty] private TextPreviewViewModel _textPreview;
 
     [ObservableProperty] 
     [NotifyCanExecuteChangedFor(nameof(PatchCommand))]
@@ -28,13 +28,13 @@ public partial class MainWindowViewModel : ViewModelBase, IRecipient<StoreChange
 
     private readonly IPatchingService _patchingService;
 
-    public MainWindowViewModel(FileInputViewModel fileInput, FontPickerViewModel fontPicker, SummaryViewModel summary,
+    public MainWindowViewModel(FileInputViewModel fileInput, FontPickerViewModel fontPicker, TextPreviewViewModel textPreview,
         IPatchingService patchingService)
     {
         _patchingService = patchingService;
         FileInput = fileInput;
         FontPicker = fontPicker;
-        Summary = summary;
+        TextPreview = textPreview;
         WeakReferenceMessenger.Default.Register<StoreChangedMessage<TargetFileState>>(this);
         WeakReferenceMessenger.Default.Register<StoreChangedMessage<FontStoreState>>(this);
     }

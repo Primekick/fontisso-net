@@ -11,7 +11,7 @@ using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Fontisso.NET.ViewModels;
 
-public partial class SummaryViewModel : ViewModelBase, IRecipient<StoreChangedMessage<FontStoreState>>,
+public partial class TextPreviewViewModel : ViewModelBase, IRecipient<StoreChangedMessage<FontStoreState>>,
     IRecipient<StoreChangedMessage<TextPreviewState>>
 {
     private readonly TextPreviewStore _textPreviewStore;
@@ -22,7 +22,7 @@ public partial class SummaryViewModel : ViewModelBase, IRecipient<StoreChangedMe
 
     [ObservableProperty] private Bitmap _previewImage = BitmapConverter.CreateBlank(580, 80, Color.White);
 
-    public SummaryViewModel(TextPreviewStore textPreviewStore)
+    public TextPreviewViewModel(TextPreviewStore textPreviewStore)
     {
         _textPreviewStore = textPreviewStore;
         WeakReferenceMessenger.Default.Register<StoreChangedMessage<FontStoreState>>(this);
