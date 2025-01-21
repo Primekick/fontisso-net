@@ -105,6 +105,33 @@ namespace Fontisso.NET.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Maniacs Patch (v210519+).
+        /// </summary>
+        public static string EngineType_ModernManiacs {
+            get {
+                return ResourceManager.GetString("EngineType_ModernManiacs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maniacs Patch (old).
+        /// </summary>
+        public static string EngineType_OldManiacs {
+            get {
+                return ResourceManager.GetString("EngineType_OldManiacs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vanilla 2k3.
+        /// </summary>
+        public static string EngineType_Vanilla {
+            get {
+                return ResourceManager.GetString("EngineType_Vanilla", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot create backup.
         /// </summary>
         public static string Error_CannotCreateBackup {

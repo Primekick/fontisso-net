@@ -8,14 +8,6 @@ public enum ExtractionError
     EngineTooOld,
 }
 
-public enum EngineType
-{
-    Undefined,
-    Vanilla,
-    OldManiacs,
-    ModernManiacs
-}
-
 public record TargetFileData(
     string FileName,
     Bitmap? FileIcon,

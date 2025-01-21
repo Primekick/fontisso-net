@@ -74,4 +74,13 @@
     <data name="Error_EngineTooOld" xml:space="preserve">
         <value>Wersja silnika jest zbyt stara, aby umożliwić patchowanie. Tylko wersje 1.12 i wyższe są wspierane.</value>
     </data>
+    <data name="EngineType_OldManiacs" xml:space="preserve">
+        <value>Maniacs Patch (stary)</value>
+    </data>
+    <data name="EngineType_Vanilla" xml:space="preserve">
+        <value>Podstawowy 2k3</value>
+    </data>
+    <data name="EngineType_ModernManiacs" xml:space="preserve">
+        <value>Maniacs Patch (v210519+)</value>
+    </data>
 </root>
