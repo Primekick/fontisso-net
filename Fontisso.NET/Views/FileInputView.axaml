@@ -6,6 +6,7 @@
              xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              xmlns:icons="using:Material.Icons.Avalonia"
              xmlns:i18n="clr-namespace:Fontisso.NET.I18n"
+             xmlns:models="using:Fontisso.NET.Data.Models"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="640"
              x:Class="Fontisso.NET.Views.FileInputView"
              x:DataType="vm:FileInputViewModel">
@@ -36,8 +37,8 @@
                                 VerticalAlignment="Center"
                                 IsVisible="{Binding !FileData.HasFile}">
                         <icons:MaterialIcon Kind="FileUploadOutline"
-                                            Width="32"
-                                            Height="32"
+                                            Width="48"
+                                            Height="48"
                                             Margin="0,0,0,8" />
                         <TextBlock Text="{x:Static i18n:UI.FileInput_DragAndDropHere}"
                                    Classes="Body1" />
@@ -48,10 +49,29 @@
                                 VerticalAlignment="Center"
                                 IsVisible="{Binding FileData.HasFile}">
                         <Image Source="{Binding FileData.FileIcon}"
-                               Height="32" Margin="0,0,16,0" />
-                        <TextBlock Text="{Binding FileData.FileName}"
-                                   VerticalAlignment="Center"
-                                   Classes="Body1" />
+                               Height="48" Margin="0,0,16,0" />
+
+                        <Grid RowDefinitions="*,*" ColumnDefinitions="*, Auto">
+                            <icons:MaterialIcon Grid.Row="0" Grid.Column="0"
+                                                Kind="TargetArrow"
+                                                Width="16"
+                                                Height="16"
+                                                Margin="0,0,8,0" />
+                            <TextBlock Grid.Row="0" Grid.Column="1"
+                                       Text="{Binding FileData.FileName}"
+                                       VerticalAlignment="Center"
+                                       Classes="Body1" />
+
+                            <icons:MaterialIcon Grid.Row="1" Grid.Column="0"
+                                                Kind="FileDocument"
+                                                Width="16"
+                                                Height="16"
+                                                Margin="0,0,8,0" />
+                            <TextBlock Grid.Row="1" Grid.Column="1"
+                                       Text="{Binding FileData.Engine, Converter={x:Static models:EngineTypeConverter.AsString}}"
+                                       VerticalAlignment="Center"
+                                       Classes="Body1" />
+                        </Grid>
                     </StackPanel>
                 </Grid>
             </material:Card>
