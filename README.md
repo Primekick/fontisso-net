@@ -1,12 +1,32 @@
-﻿# axer.tech | Fontisso
+﻿<div align="center">
 
-*Work in progress*
+# axer.tech | Fontisso
 
-Fontisso provides a fast and simple way to swap out different fonts for RPG Maker 2003.
+A simple GUI application for replacing built-in fonts embedded in RPG Maker 2003 files.
+</div>
 
 ## Preview
-![Fontisso NET_20241013-214524](https://github.com/user-attachments/assets/e0a5cfbd-e8cf-4d69-96fd-f07d85d6e1a1)
+![Fontisso Preview](https://files.catbox.moe/s7mjt3.png)
 
-## Requirements 
-* Windows 10 and up
-* Possible to run on Windows 7 via VxKex
+## Features
+- Simple and intuitive user interface for font replacement
+- Collection of 12 pre-installed fonts with Polish diacritics support
+- Real-time text preview using your selected font
+- Automatic backups to prevent data loss during patching
+
+## Roadmap
+- Support for importing your own fonts
+- Extended font library with multi-language support
+- System window skin integration in text preview
+
+## Platform compatibility 
+| Operating System | Status |
+|-----------------|--------|
+| Windows 11      | ✅     |
+| Windows 10      | ✅     |
+| Windows 7       | ⚠️ Requires [VxKex](https://github.com/i486/VxKex) |
+
+## License
+This project is licensed under the GNU General Public License v3.0 or later.
+
+See [LICENSE](LICENSE) for details.
