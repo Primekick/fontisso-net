@@ -14,3 +14,5 @@ __declspec(dllexport) BOOLEAN WINAPI DllMain(HMODULE hModule, DWORD  ul_reason_f
     }
     return TRUE;
 }
+
+__declspec(dllexport) void Dummy() {}
