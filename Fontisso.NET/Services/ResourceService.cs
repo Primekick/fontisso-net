@@ -177,6 +177,11 @@ public partial class ResourceService : IResourceService
 
             EnumResNameProc enumResNameCallback = (hModule, _, lpName, _) =>
             {
+                if (lpName != (nint)FontKind.RPG2000 || lpName != (nint)FontKind.RPG2000G)
+                {
+                    return true;
+                }
+                
                 if (!EnumResourceLanguages(hModule, RT_RCDATA, lpName, enumResLangCallback, IntPtr.Zero))
                 {
                     var error = Marshal.GetLastWin32Error();
