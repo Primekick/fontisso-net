@@ -1,14 +1,14 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.Versioning;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Fontisso.NET.Helpers;
 
 public static class BitmapConverter
 {
-    [SuppressMessage("Interoperability", "CA1416:Walidacja zgodności z platformą")]
+    [SupportedOSPlatform("windows")]
     public static Bitmap FromGdiBitmapToAvaloniaBitmap(System.Drawing.Bitmap gdiBitmap)
     {
         using var stream = new MemoryStream();
@@ -18,7 +18,7 @@ public static class BitmapConverter
         return new Bitmap(stream);
     }
     
-    [SuppressMessage("Interoperability", "CA1416:Walidacja zgodności z platformą")]
+    [SupportedOSPlatform("windows")]
     public static Bitmap CreateBlank(int width, int height, Color color)
     {
         var blankBitmap = new System.Drawing.Bitmap(width, height, PixelFormat.Format24bppRgb);
