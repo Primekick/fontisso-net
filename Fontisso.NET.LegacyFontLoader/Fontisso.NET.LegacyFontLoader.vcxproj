@@ -12,6 +12,7 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{5a854c7a-77a9-4d5f-9042-24ba03eca002}</ProjectGuid>
     <RootNamespace>FontissoNETLegacyFontLoader</RootNamespace>
+    <DefaultPlatformToolset>v100</DefaultPlatformToolset>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -20,28 +21,46 @@
     <PlatformToolset>MinGW</PlatformToolset>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <OutDir>$(SolutionDir)Fontisso.NET\bin\$(Configuration)\net8.0\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
-    <NMakeBuildCommandLine>g++ -m32 -shared -o "$(OutDir)Fontisso.NET.LegacyFontLoader.dll" main.c -luser32 -lgdi32</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>g++ -m32 -shared -o "$(OutDir)Fontisso.NET.LegacyFontLoader.dll" main.c -luser32 -lgdi32</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>del "$(OutDir)LegacyFontLoader.dll"</NMakeCleanCommandLine>
-    <NMakeBuildCommandLineType>Make</NMakeBuildCommandLineType>
-  </PropertyGroup>
-
-  <ItemDefinitionGroup>
-    <NMake>
-      <BuildCommandLine>g++ -m32 -shared -o "$(OutDir)Fontisso.NET.LegacyFontLoader.dll" main.c -luser32 -lgdi32</BuildCommandLine>
-      <NMakeReBuildCommandLine>g++ -m32 -shared -o "$(OutDir)Fontisso.NET.LegacyFontLoader.dll" main.c -luser32 -lgdi32</NMakeReBuildCommandLine>
-      <CleanCommandLine>del "$(OutDir)LegacyFontLoader.dll"</CleanCommandLine>
-      <BuildCommandLineType>Make</BuildCommandLineType>
-    </NMake>
-  </ItemDefinitionGroup>
-
   <ItemGroup>
     <ClCompile Include="main.c" />
   </ItemGroup>
 
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <Target Name="Build">
+    <MakeDir Directories="$(ProjectDir)bin\$(Configuration)\net8.0" />
+    <Exec Command="gcc -m32 -s -shared -o &quot;$(ProjectDir)bin\$(Configuration)\net8.0\Fontisso.NET.LegacyFontLoader.dll&quot; main.c -lgdi32 -Os" />
+  </Target>
+
+  <Target Name="Clean">
+    <Delete Files="$(SolutionDir)Fontisso.NET\bin\$(Configuration)\net8.0\Fontisso.NET.LegacyFontLoader.dll" />
+  </Target>
+
+  <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+  
+  <Target Name="Publish" DependsOnTargets="Build" />
+  
+  <Target Name="GetCopyToPublishDirectoryItems" Returns="@(AllPublishItemsFullPathWithTargetPath)">
+    <ItemGroup>
+      <AllPublishItemsFullPathWithTargetPath Include="$(SolutionDir)Fontisso.NET\bin\$(Configuration)\net8.0\Fontisso.NET.LegacyFontLoader.dll">
+        <TargetPath>Fontisso.NET.LegacyFontLoader.dll</TargetPath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </AllPublishItemsFullPathWithTargetPath>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="GetTargetPath" Returns="@(TargetPathWithTargetPlatformMoniker)">
+    <ItemGroup>
+      <TargetPathWithTargetPlatformMoniker Include="$(SolutionDir)Fontisso.NET\bin\$(Configuration)\net8.0\Fontisso.NET.LegacyFontLoader.dll">
+        <TargetPath>Fontisso.NET.LegacyFontLoader.dll</TargetPath>
+        <Platform>Win32</Platform>
+      </TargetPathWithTargetPlatformMoniker>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ValidateLegacyDLL" BeforeTargets="Publish">
+    <PropertyGroup>
+      <_LegacyDLLPath>..\Fontisso.NET.LegacyFontLoader\bin\$(Configuration)\net8.0\Fontisso.NET.LegacyFontLoader.dll</_LegacyDLLPath>
+    </PropertyGroup>
+    <Error Condition="!Exists($(_LegacyDLLPath))"
+           Text="The DLL was not built. Check that the VCXPROJ builds to: $(_LegacyDLLPath)" />
+  </Target>
 </Project>

@@ -11,4 +11,11 @@
       <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\Fontisso.NET.LegacyFontLoader\Fontisso.NET.LegacyFontLoader.vcxproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+            <UndefineProperties>TargetFramework</UndefineProperties>
+        </ProjectReference>
+    </ItemGroup>
 </Project>

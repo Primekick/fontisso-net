@@ -1,80 +1,95 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <ApplicationIcon>Assets\fontisso.ico</ApplicationIcon>
-    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <ApplicationIcon>Assets\fontisso.ico</ApplicationIcon>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <AvaloniaResource Include="Assets\**" />
-  </ItemGroup>
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.2.3" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.2.3" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.3" />
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.3" />
-    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.2.0.7">
-      <IsTrimmable>false</IsTrimmable>
-    </PackageReference>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="DialogHost.Avalonia" Version="0.9.1" />
-    <PackageReference Include="Material.Avalonia" Version="3.9.1" />
-    <PackageReference Include="Material.Icons.Avalonia" Version="2.1.11" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-    <PackageReference Include="OneOf" Version="3.0.271" />
-    <PackageReference Include="SharpFont" Version="4.0.1" />
-    <PackageReference Include="SharpFont.Dependencies" Version="2.6.0" GeneratePathProperty="true" />
-    <PackageReference Include="SharpFontStandard" Version="4.0.1" />
-    <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
-    <PackageReference Include="System.Text.Encoding" Version="4.3.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.2.3"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.2.3"/>
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.3"/>
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.3"/>
+        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.2.0.7">
+            <IsTrimmable>false</IsTrimmable>
+        </PackageReference>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
+        <PackageReference Include="DialogHost.Avalonia" Version="0.9.1"/>
+        <PackageReference Include="Material.Avalonia" Version="3.9.1"/>
+        <PackageReference Include="Material.Icons.Avalonia" Version="2.1.11"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1"/>
+        <PackageReference Include="OneOf" Version="3.0.271"/>
+        <PackageReference Include="PeNet" Version="4.1.1"/>
+        <PackageReference Include="SharpFont" Version="4.0.1"/>
+        <PackageReference Include="SharpFont.Dependencies" Version="2.6.0" GeneratePathProperty="true"/>
+        <PackageReference Include="SharpFontStandard" Version="4.0.1"/>
+        <PackageReference Include="System.Drawing.Common" Version="8.0.10"/>
+        <PackageReference Include="System.Text.Encoding" Version="4.3.0"/>
+        <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="$(PkgSharpFont_Dependencies)\bin\msvc10\x86\freetype6.dll">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
-    <Content Include="$(PkgSharpFont_Dependencies)\bin\msvc10\x64\freetype6.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Update="$(PkgSharpFont_Dependencies)\bin\msvc10\x86\freetype6.dll">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </Content>
+        <Content Include="$(PkgSharpFont_Dependencies)\bin\msvc10\x64\freetype6.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="I18n\UI.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>UI.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Update="I18n\UI.resx">
+            <Generator>PublicResXFileCodeGenerator</Generator>
+            <LastGenOutput>UI.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="I18n\UI.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>UI.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="I18n\UI.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>UI.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Fontisso.NET.Flux\Fontisso.NET.Flux.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Fontisso.NET.Flux\Fontisso.NET.Flux.csproj"/>
+        <ProjectReference Include="..\Fontisso.NET.LegacyFontLoader\Fontisso.NET.LegacyFontLoader.vcxproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+            <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+            <UndefineProperties>TargetFramework</UndefineProperties>
+        </ProjectReference>
+    </ItemGroup>
 
-  <PropertyGroup>
-    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
-  </PropertyGroup>
+    <ItemGroup>
+        <Content Include="..\Fontisso.NET.LegacyFontLoader\bin\$(Configuration)\net8.0\Fontisso.NET.LegacyFontLoader.dll">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+            <Link>Fontisso.NET.LegacyFontLoader.dll</Link>
+            <Visible>false</Visible>
+        </Content>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="$(OutDir)Fontisso.NET.LegacyFontLoader.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <Link>Fontisso.NET.LegacyFontLoader.dll</Link>
-    </Content>
-  </ItemGroup>
+    <Target Name="CopyLegacyDLLToPublish" AfterTargets="Publish">
+        <PropertyGroup>
+            <_LegacyDLLPath>..\Fontisso.NET.LegacyFontLoader\bin\$(Configuration)\net8.0\Fontisso.NET.LegacyFontLoader.dll</_LegacyDLLPath>
+        </PropertyGroup>
+        
+        <Copy SourceFiles="$(_LegacyDLLPath)"
+              DestinationFolder="$(PublishDir)"
+              Condition="Exists($(_LegacyDLLPath))"/>
+        
+        <Error Condition="!Exists($(_LegacyDLLPath))"
+               Text="Legacy DLL not found. Rebuild the VCXPROJ first."/>
+    </Target>
 
 </Project>
