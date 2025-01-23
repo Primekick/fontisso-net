@@ -64,4 +64,17 @@
     <ProjectReference Include="..\Fontisso.NET.Flux\Fontisso.NET.Flux.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="$(OutDir)Fontisso.NET.LegacyFontLoader.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Link>Fontisso.NET.LegacyFontLoader.dll</Link>
+    </Content>
+  </ItemGroup>
+
 </Project>

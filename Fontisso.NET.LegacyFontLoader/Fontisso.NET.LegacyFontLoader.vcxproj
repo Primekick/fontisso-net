@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{5a854c7a-77a9-4d5f-9042-24ba03eca002}</ProjectGuid>
+    <RootNamespace>FontissoNETLegacyFontLoader</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>MinGW</PlatformToolset>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)Fontisso.NET\bin\$(Configuration)\net8.0\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <NMakeBuildCommandLine>g++ -m32 -shared -o "$(OutDir)Fontisso.NET.LegacyFontLoader.dll" main.c -luser32 -lgdi32</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>g++ -m32 -shared -o "$(OutDir)Fontisso.NET.LegacyFontLoader.dll" main.c -luser32 -lgdi32</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>del "$(OutDir)LegacyFontLoader.dll"</NMakeCleanCommandLine>
+    <NMakeBuildCommandLineType>Make</NMakeBuildCommandLineType>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <NMake>
+      <BuildCommandLine>g++ -m32 -shared -o "$(OutDir)Fontisso.NET.LegacyFontLoader.dll" main.c -luser32 -lgdi32</BuildCommandLine>
+      <NMakeReBuildCommandLine>g++ -m32 -shared -o "$(OutDir)Fontisso.NET.LegacyFontLoader.dll" main.c -luser32 -lgdi32</NMakeReBuildCommandLine>
+      <CleanCommandLine>del "$(OutDir)LegacyFontLoader.dll"</CleanCommandLine>
+      <BuildCommandLineType>Make</BuildCommandLineType>
+    </NMake>
+  </ItemDefinitionGroup>
+
+  <ItemGroup>
+    <ClCompile Include="main.c" />
+  </ItemGroup>
+
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
