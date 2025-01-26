@@ -16,7 +16,7 @@ public interface IFontRenderer
 {
     Task<AvaloniaBitmap> RenderTextToAvaloniaBitmapAsync(
         string text,
-        byte[] fontData,
+        ReadOnlyMemory<byte> fontData,
         FontRenderOptions options
     );
 }
@@ -24,11 +24,11 @@ public interface IFontRenderer
 public class FontRenderer(SharpFont.Library freetype, ITextLayoutEngine layout) : IFontRenderer
 {
     [SupportedOSPlatform("windows")]
-    public async Task<AvaloniaBitmap> RenderTextToAvaloniaBitmapAsync(string text, byte[] fontData,
+    public async Task<AvaloniaBitmap> RenderTextToAvaloniaBitmapAsync(string text, ReadOnlyMemory<byte> fontData,
         FontRenderOptions options) =>
         await Task.Run(() =>
         {
-            var face = new SharpFont.Face(freetype, fontData, 0);
+            var face = CreateFace(fontData);
 
             var initWidth = options.Width / 2;
             const int lineHeight = 16;
@@ -96,7 +96,7 @@ public class FontRenderer(SharpFont.Library freetype, ITextLayoutEngine layout) 
 
             return BitmapConverter.FromGdiBitmapToAvaloniaBitmap(ScaleBitmap(gdiBitmap, 2.0f));
         });
-    
+
     [SupportedOSPlatform("windows")]
     private static GdiBitmap ScaleBitmap(GdiBitmap sourceBitmap, float scaleFactor)
     {
@@ -116,4 +116,7 @@ public class FontRenderer(SharpFont.Library freetype, ITextLayoutEngine layout) 
 
         return newBitmap;
     }
+
+    private unsafe SharpFont.Face CreateFace(ReadOnlyMemory<byte> fontData) =>
+        new(freetype, (IntPtr)fontData.Pin().Pointer, fontData.Length, 0);
 }

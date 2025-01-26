@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Threading.Tasks;
 using Fontisso.NET.Flux;
 using Fontisso.NET.Helpers;
@@ -11,7 +12,7 @@ public record SetPreviewWidthAction(double PreviewWidth) : IAction;
 
 public record GeneratePreviewImageAction(
     string Text,
-    byte[] FontData,
+    ReadOnlyMemory<byte> FontData,
     float FontSize,
     Color TextColor,
     Color BackgroundColor

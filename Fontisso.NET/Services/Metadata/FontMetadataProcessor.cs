@@ -7,7 +7,7 @@ public interface IFontMetadataProcessor
 {
     string ExtractModuleName(ReadOnlySpan<byte> data);
     string ExtractAttribution(ReadOnlySpan<byte> data);
-    byte[] SetFaceName(byte[] data, string newName);
+    ReadOnlyMemory<byte> SetFaceName(ReadOnlyMemory<byte> data, string newName);
 }
 
 public sealed class FontMetadataProcessor : IFontMetadataProcessor
@@ -28,9 +28,9 @@ public sealed class FontMetadataProcessor : IFontMetadataProcessor
             var offset => Encoding.ASCII.GetString(data.Slice(offset + 0x6, 60)).Trim()
         };
 
-    public byte[] SetFaceName(byte[] data, string newName)
+    public ReadOnlyMemory<byte> SetFaceName(ReadOnlyMemory<byte> data, string newName)
     {
-        var newData = (byte[])data.Clone();
+        var newData = data.ToArray();
         var dataSpan = newData.AsSpan();
         var fontDirOffset = ExtractOffsetToResourceDirectoryEntry(dataSpan, 0x8007);
         // FONTGROUPHDR size + szFaceName offset (assuming szDeviceName is null)

@@ -18,7 +18,7 @@ namespace Fontisso.NET.Services;
 
 public interface IFontService
 {
-    Task<AvaloniaBitmap> RenderTextToAvaloniaBitmapAsync(string text, byte[] fontData, float fontSize, Color textColor,
+    Task<AvaloniaBitmap> RenderTextToAvaloniaBitmapAsync(string text, ReadOnlyMemory<byte> fontData, float fontSize, Color textColor,
         Color backgroundColor, int width);
 
     Task<ImmutableList<FontEntry>> LoadAvailableFonts();
@@ -39,7 +39,7 @@ public sealed class FontService : IFontService
     }
 
     public async Task<AvaloniaBitmap> RenderTextToAvaloniaBitmapAsync(string text,
-        byte[] fontData,
+        ReadOnlyMemory<byte> fontData,
         float fontSize,
         Color textColor,
         Color backgroundColor,
