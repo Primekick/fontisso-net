@@ -1,4 +1,16 @@
-﻿namespace Fontisso.NET.Data.Models;
+﻿using System;
+
+namespace Fontisso.NET.Data.Models;
+
+public static class FontKindExtensions
+{
+    public static string ToDisplayString(this FontKind fontKind) => fontKind switch
+    {
+        FontKind.RPG2000 => "RPG2000",
+        FontKind.RPG2000G => "RPG2000G",
+        _ => throw new InvalidOperationException()
+    };
+}
 
 public enum FontKind
 {

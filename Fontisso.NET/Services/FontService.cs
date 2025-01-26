@@ -61,8 +61,8 @@ public sealed class FontService : IFontService
             .Select(data => new FontEntry(
                 _fontMetadata.ExtractModuleName(data),
                 _fontMetadata.ExtractAttribution(data),
-                _fontMetadata.SetFaceNameByFontKind(data, FontKind.RPG2000),
-                _fontMetadata.SetFaceNameByFontKind(data, FontKind.RPG2000G)
+                _fontMetadata.SetFaceName(data, FontKind.RPG2000.ToDisplayString()),
+                _fontMetadata.SetFaceName(data, FontKind.RPG2000G.ToDisplayString())
             ))
             .ToImmutableList());
 }

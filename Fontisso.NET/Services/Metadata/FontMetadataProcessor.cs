@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using Fontisso.NET.Data.Models;
 
 namespace Fontisso.NET.Services.Metadata;
 
@@ -8,7 +7,7 @@ public interface IFontMetadataProcessor
 {
     string ExtractModuleName(ReadOnlySpan<byte> data);
     string ExtractAttribution(ReadOnlySpan<byte> data);
-    byte[] SetFaceNameByFontKind(byte[] data, FontKind kind);
+    byte[] SetFaceName(byte[] data, string newName);
 }
 
 public sealed class FontMetadataProcessor : IFontMetadataProcessor
@@ -29,15 +28,8 @@ public sealed class FontMetadataProcessor : IFontMetadataProcessor
             var offset => Encoding.ASCII.GetString(data.Slice(offset + 0x6, 60)).Trim()
         };
 
-    public byte[] SetFaceNameByFontKind(byte[] data, FontKind kind)
+    public byte[] SetFaceName(byte[] data, string newName)
     {
-        var newName = kind switch
-        {
-            FontKind.RPG2000 => "CstmFnt01",
-            FontKind.RPG2000G => "CstmFnt02",
-            _ => throw new InvalidOperationException()
-        };
-
         var newData = (byte[])data.Clone();
         var dataSpan = newData.AsSpan();
         var fontDirOffset = ExtractOffsetToResourceDirectoryEntry(dataSpan, 0x8007);
