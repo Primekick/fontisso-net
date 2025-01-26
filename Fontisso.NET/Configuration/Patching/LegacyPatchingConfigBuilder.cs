@@ -1,4 +1,6 @@
-﻿namespace Fontisso.NET.Configuration.Patching;
+﻿using System.Text;
+
+namespace Fontisso.NET.Configuration.Patching;
 
 public sealed class LegacyPatchingConfigBuilder
 {
@@ -45,10 +47,10 @@ public sealed class LegacyPatchingConfigBuilder
             FontsDirectory: _fontsDirectory,
             FontFileNameA: _fontFileNames.Item1,
             FontFileNameB: _fontFileNames.Item2,
-            BuiltinFontNameA: _builtinFontNames.Item1,
-            BuiltinFontNameB: _builtinFontNames.Item2,
-            CustomFontNameA: _customFontNames.Item1,
-            CustomFontNameB: _customFontNames.Item2
+            BuiltinFontNameA: Encoding.ASCII.GetBytes(_builtinFontNames.Item1),
+            BuiltinFontNameB: Encoding.ASCII.GetBytes(_builtinFontNames.Item2),
+            CustomFontNameA: Encoding.ASCII.GetBytes(_customFontNames.Item1),
+            CustomFontNameB: Encoding.ASCII.GetBytes(_customFontNames.Item2)
         );
     }
 }
