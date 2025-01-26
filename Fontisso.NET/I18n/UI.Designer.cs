@@ -114,6 +114,15 @@ namespace Fontisso.NET.I18n {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Vanilla 2k3 (Steam).
+        /// </summary>
+        public static string EngineType_ModernVanilla2k3 {
+            get {
+                return ResourceManager.GetString("EngineType_ModernVanilla2k3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Maniacs Patch (old).
         /// </summary>
         public static string EngineType_OldManiacs {
@@ -123,11 +132,20 @@ namespace Fontisso.NET.I18n {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Vanilla 2k3.
+        ///   Looks up a localized string similar to Old vanilla 2k3.
         /// </summary>
-        public static string EngineType_Vanilla {
+        public static string EngineType_OldVanilla2k3 {
             get {
-                return ResourceManager.GetString("EngineType_Vanilla", resourceCulture);
+                return ResourceManager.GetString("EngineType_OldVanilla2k3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vanilla 2k.
+        /// </summary>
+        public static string EngineType_Vanilla2k {
+            get {
+                return ResourceManager.GetString("EngineType_Vanilla2k", resourceCulture);
             }
         }
         

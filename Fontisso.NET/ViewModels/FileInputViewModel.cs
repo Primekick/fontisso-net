@@ -59,7 +59,7 @@ public partial class FileInputViewModel : ViewModelBase, IRecipient<StoreChanged
         {
             var errorDescription = message.State.FileData.AsT1 switch
             {
-                ExtractionError.NotRm2k3 => I18n.UI.Error_Not2k3File,
+                ExtractionError.NotRm2kX => I18n.UI.Error_Not2k3File,
                 ExtractionError.EngineTooOld => I18n.UI.Error_EngineTooOld,
                 _ => throw new UnreachableException()
             };

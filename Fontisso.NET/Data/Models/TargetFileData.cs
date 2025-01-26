@@ -4,7 +4,7 @@ using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
 
 public enum ExtractionError
 {
-    NotRm2k3,
+    NotRm2kX,
     EngineTooOld,
 }
 

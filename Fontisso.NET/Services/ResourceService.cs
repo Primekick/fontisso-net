@@ -240,12 +240,12 @@ public partial class ResourceService : IResourceService
 
             if (peReader is not { IsEntireImageAvailable: true })
             {
-                return ExtractionError.NotRm2k3;
+                return ExtractionError.NotRm2kX;
             }
 
             if (peReader.PEHeaders.CoffHeader is not { } fileHeader)
             {
-                return ExtractionError.NotRm2k3;
+                return ExtractionError.NotRm2kX;
             }
 
             // old Maniacs has larger CHERRY section than vanilla
@@ -260,12 +260,12 @@ public partial class ResourceService : IResourceService
             {
                 (true, _) => EngineType.ModernManiacs,
                 (false, true) => EngineType.OldManiacs,
-                (false, false) => EngineType.Vanilla
+                (false, false) => EngineType.ModernVanilla2k3
             };
         }
         catch (Exception)
         {
-            return ExtractionError.NotRm2k3;
+            return ExtractionError.NotRm2kX;
         }
     }
 
@@ -277,23 +277,23 @@ public partial class ResourceService : IResourceService
         // 2k3 should always have a version info regardless of version
         if (versionInfo.ProductVersion is null)
         {
-            return ExtractionError.NotRm2k3;
+            return ExtractionError.NotRm2kX;
         }
 
         // check if it has a valid product version
         if (VERSION_REGEX.Match(versionInfo.ProductVersion) is not { Success: true } match)
         {
-            return ExtractionError.NotRm2k3;
+            return ExtractionError.NotRm2kX;
         }
 
         if (match.Groups is not [_, var majorVersion, var minorVersion])
         {
-            return ExtractionError.NotRm2k3;
+            return ExtractionError.NotRm2kX;
         }
 
         if (!int.TryParse(majorVersion.Value, out var major) || !int.TryParse(minorVersion.Value, out var minor))
         {
-            return ExtractionError.NotRm2k3;
+            return ExtractionError.NotRm2kX;
         }
 
         // only Steam version of 2k3 is patchable
