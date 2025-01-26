@@ -1,6 +1,6 @@
-﻿using Avalonia.Media.Imaging;
+﻿namespace Fontisso.NET.Data.Models;
 
-namespace Fontisso.NET.Data.Models;
+using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
 
 public enum ExtractionError
 {
@@ -10,7 +10,7 @@ public enum ExtractionError
 
 public record TargetFileData(
     string FileName,
-    Bitmap? FileIcon,
+    AvaloniaBitmap? FileIcon,
     bool HasFile,
     string TargetFilePath,
     EngineType Engine

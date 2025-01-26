@@ -13,13 +13,14 @@ using System.Threading.Tasks;
 using Fontisso.NET.Data.Models;
 using Fontisso.NET.Helpers;
 using OneOf;
-using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Fontisso.NET.Services;
 
+using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
+
 public interface IResourceService
 {
-    Task<Bitmap> ExtractIconFromFile(string filePath);
+    Task<AvaloniaBitmap> ExtractIconFromFile(string filePath);
     void WriteResources(string filePath, ICollection<(FontKind kind, ReadOnlyMemory<byte> data)> resources);
     Task<OneOf<TargetFileData, ExtractionError>> ExtractTargetFileData(string filePath);
 }
@@ -94,7 +95,7 @@ public partial class ResourceService : IResourceService
     private const uint LOAD_LIBRARY_AS_DATAFILE = 0x00000002;
 
     [SupportedOSPlatform("windows")]
-    public async Task<Bitmap> ExtractIconFromFile(string filePath) => await Task.Run(() =>
+    public async Task<AvaloniaBitmap> ExtractIconFromFile(string filePath) => await Task.Run(() =>
     {
         var iconHandle = ExtractIcon(IntPtr.Zero, filePath, 0);
 

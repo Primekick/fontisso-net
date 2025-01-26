@@ -4,9 +4,10 @@ using System.Threading.Tasks;
 using Fontisso.NET.Flux;
 using Fontisso.NET.Helpers;
 using Fontisso.NET.Services;
-using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Fontisso.NET.Data.Stores;
+
+using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
 
 public record SetPreviewWidthAction(double PreviewWidth) : IAction;
 
@@ -18,10 +19,10 @@ public record GeneratePreviewImageAction(
     Color BackgroundColor
 ) : IAction;
 
-public record TextPreviewState(Bitmap PreviewImage, double PreviewWidth)
+public record TextPreviewState(AvaloniaBitmap PreviewImage, double PreviewWidth)
 {
     public static TextPreviewState Default => new(
-        BitmapConverter.CreateBlank(580, 80, Color.White),
+        BitmapConverter.CreateBlankAvaloniaBitmap(580, 80, Color.White),
         580
     );
 }

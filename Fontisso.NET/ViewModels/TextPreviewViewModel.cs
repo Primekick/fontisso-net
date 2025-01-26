@@ -7,9 +7,10 @@ using Fontisso.NET.Data.Models;
 using Fontisso.NET.Data.Stores;
 using Fontisso.NET.Flux;
 using Fontisso.NET.Helpers;
-using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Fontisso.NET.ViewModels;
+
+using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
 
 public partial class TextPreviewViewModel : ViewModelBase, IRecipient<StoreChangedMessage<FontStoreState>>,
     IRecipient<StoreChangedMessage<TextPreviewState>>
@@ -20,7 +21,7 @@ public partial class TextPreviewViewModel : ViewModelBase, IRecipient<StoreChang
 
     [ObservableProperty] private string _previewText = I18n.UI.Summary_SampleText;
 
-    [ObservableProperty] private Bitmap _previewImage = BitmapConverter.CreateBlank(580, 80, Color.White);
+    [ObservableProperty] private AvaloniaBitmap _previewImage = BitmapConverter.CreateBlankAvaloniaBitmap(580, 80, Color.White);
 
     public TextPreviewViewModel(TextPreviewStore textPreviewStore)
     {
