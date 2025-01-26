@@ -29,11 +29,11 @@ public static class ServiceCollectionExtensions
             )
             .AddSingleton<IFontService, FontService>()
             .AddSingleton<IResourceService, ResourceService>()
-            .AddSingleton<IPatchingService, PatchingService>()
             .AddSingleton<IFontRenderer, FontRenderer>()
             .AddSingleton<ITextLayoutEngine, TextLayoutEngine>()
             .AddSingleton<IFontMetadataProcessor, FontMetadataProcessor>()
             .AddPatchingStrategies()
+            .AddSingleton<IPatchingService, PatchingService>()
             .AddSingleton<SharpFont.Library>(_ => new SharpFont.Library());
 
 
@@ -48,15 +48,15 @@ public static class ServiceCollectionExtensions
     }
 
     private static IServiceCollection AddPatchingStrategies(this IServiceCollection services) =>
-        services.AddSingleton<IPatchingStrategy, LegacyPatchingStrategy>()
-            .AddSingleton<IPatchingStrategy, ModernPatchingStrategy>()
+        services.AddKeyedSingleton<IPatchingStrategy, LegacyPatchingStrategy>("legacy")
+            .AddKeyedSingleton<IPatchingStrategy, ModernPatchingStrategy>("modern")
             .AddSingleton(sp => new PatchingStrategyContext([
                 new EnginePatchingMapping(
-                    Strategy: sp.GetRequiredService<LegacyPatchingStrategy>(),
+                    Strategy: sp.GetRequiredKeyedService<IPatchingStrategy>("legacy"),
                     Engines: [EngineType.Vanilla2k, EngineType.OldVanilla2k3]
                 ),
                 new EnginePatchingMapping(
-                    Strategy: sp.GetRequiredService<ModernPatchingStrategy>(),
+                    Strategy: sp.GetRequiredKeyedService<IPatchingStrategy>("modern"),
                     Engines: [EngineType.ModernVanilla2k3, EngineType.OldManiacs, EngineType.ModernManiacs]
                 )
             ]));
