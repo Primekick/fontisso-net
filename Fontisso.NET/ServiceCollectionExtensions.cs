@@ -1,5 +1,7 @@
 ﻿using Fontisso.NET.Data.Stores;
 using Fontisso.NET.Services;
+using Fontisso.NET.Services.Metadata;
+using Fontisso.NET.Services.Rendering;
 using Fontisso.NET.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,7 +22,11 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<IFontService, FontService>()
             .AddSingleton<IResourceService, ResourceService>()
-            .AddSingleton<IPatchingService, PatchingService>();
+            .AddSingleton<IPatchingService, PatchingService>()
+            .AddSingleton<IFontRenderer, FontRenderer>()
+            .AddSingleton<ITextLayoutEngine, TextLayoutEngine>()
+            .AddSingleton<IFontMetadataProcessor, FontMetadataProcessor>()
+            .AddSingleton<SharpFont.Library>(_ => new SharpFont.Library());
         return services;
     }
 

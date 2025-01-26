@@ -39,7 +39,7 @@ public class TextPreviewStore : Store<TextPreviewState>
         switch (action)
         {
             case GeneratePreviewImageAction gpia:
-                var previewImage = await _fontService.RenderTextToBitmap(gpia.Text, gpia.FontData, gpia.FontSize,
+                var previewImage = await _fontService.RenderTextToAvaloniaBitmapAsync(gpia.Text, gpia.FontData, gpia.FontSize,
                     gpia.TextColor, gpia.BackgroundColor, (int)State.PreviewWidth);
                 SetState(state => state with { PreviewImage = previewImage });
                 break;
