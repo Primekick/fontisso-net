@@ -35,9 +35,7 @@ public partial class App : Application
             BindingPlugins.DataValidators.RemoveAt(0);
             
             var services = new ServiceCollection();
-            services.AddFontissoServices()
-                .AddDataStores()
-                .AddFontissoViewModels();
+            services.AddFontissoApp();
             
             var provider = services.BuildServiceProvider();
             Ioc.Default.ConfigureServices(provider);

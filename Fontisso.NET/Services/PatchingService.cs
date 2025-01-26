@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Threading.Tasks;
 using Fontisso.NET.Data.Models;
+using Fontisso.NET.Services.Patching;
 
 namespace Fontisso.NET.Services;
 
@@ -13,15 +12,8 @@ public interface IPatchingService
         ReadOnlyMemory<byte> rpg2000GData);
 }
 
-public class PatchingService : IPatchingService
+public class PatchingService(PatchingStrategyContext strategyContext) : IPatchingService
 {
-    private readonly IResourceService _resourceService;
-
-    public PatchingService(IResourceService resourceService)
-    {
-        _resourceService = resourceService;
-    }
-
     public OperationResult PatchExecutable(TargetFileData tfd, ReadOnlyMemory<byte> rpg2000Data,
         ReadOnlyMemory<byte> rpg2000GData)
     {
@@ -42,8 +34,8 @@ public class PatchingService : IPatchingService
 
         try
         {
-            var resources = new[] { (FontKind.RPG2000, rpg2000Data), (FontKind.RPG2000G, rpg2000GData) };
-            _resourceService.WriteResources(tfd.TargetFilePath, resources);
+            var strategy = strategyContext.GetStrategy(tfd.Engine);
+            strategy.Patch(tfd.TargetFilePath, rpg2000Data, rpg2000GData);
         }
         catch (Exception e)
         {
