@@ -25,7 +25,7 @@ public static class ServiceCollectionExtensions
                     .WithFontsDirectory("Fonts")
                     .WithFontFileNames(("RPG2000.fon", "RPG2000G.fon"))
                     .WithBuiltinFontNames(("MS Mincho", "MS Gothic"))
-                    .WithCustomFontNames(("CstmFnt01", "CstmFnt02"))
+                    .WithCustomFontNames(("Cstm01", "Cstm02"))
             )
             .AddSingleton<IFontService, FontService>()
             .AddSingleton<IResourceService, ResourceService>()
