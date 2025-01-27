@@ -46,11 +46,9 @@ public sealed class LegacyPatchingStrategy(LegacyPatchingConfig config, IFontMet
         }
 
         var binary = peFile.RawFile.ToArray().AsSpan();
-        // sometimes the builtin font name appears twice in the game binary hence two replacement calls - needs more research
-        binary.Replace(config.BuiltinFontNameA.Span, config.CustomFontNameA.Span);
-        binary.Replace(config.BuiltinFontNameA.Span, config.CustomFontNameA.Span);
-        binary.Replace(config.BuiltinFontNameB.Span, config.CustomFontNameB.Span);
-        binary.Replace(config.BuiltinFontNameB.Span, config.CustomFontNameB.Span);
+        // sometimes the builtin font names appear more than once in the game binary hence the looped replacement calls - needs more research
+        while (binary.TryReplace(config.BuiltinFontNameA.Span, config.CustomFontNameA.Span));
+        while (binary.TryReplace(config.BuiltinFontNameB.Span, config.CustomFontNameB.Span));
         FileExtensions.OpenAndWrite(filePath, binary);
     }
 }
