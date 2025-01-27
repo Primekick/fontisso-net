@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions
                     .WithLegacyLoaderDllName("Fontisso.NET.LegacyFontLoader.dll")
                     .WithFontsDirectory("Fonts")
                     .WithFontFileNames(("RPG2000.fon", "RPG2000G.fon"))
-                    .WithBuiltinFontNames(("MS Mincho", "MS Gothic"))
+                    .WithBuiltinFontNames([("MS Mincho", "MS Gothic"), ("RM2000", "RMG2000")])
                     .WithCustomFontNames(("Cstm01", "Cstm02"))
             )
             .AddSingleton<IFontService, FontService>()

@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Linq;
+using System.Text;
 
 namespace Fontisso.NET.Configuration.Patching;
 
@@ -7,7 +9,7 @@ public sealed class LegacyPatchingConfigBuilder
     private string _legacyLoaderDllName;
     private string _fontsDirectory;
     private (string, string) _fontFileNames;
-    private (string, string) _builtinFontNames;
+    private (string, string)[] _builtinFontNames;
     private (string, string) _customFontNames;
     
     public LegacyPatchingConfigBuilder WithLegacyLoaderDllName(string dllName)
@@ -28,7 +30,7 @@ public sealed class LegacyPatchingConfigBuilder
         return this;
     }
 
-    public LegacyPatchingConfigBuilder WithBuiltinFontNames((string, string) names)
+    public LegacyPatchingConfigBuilder WithBuiltinFontNames((string, string)[] names)
     {
         _builtinFontNames = names;
         return this;
@@ -47,8 +49,8 @@ public sealed class LegacyPatchingConfigBuilder
             FontsDirectory: _fontsDirectory,
             FontFileNameA: _fontFileNames.Item1,
             FontFileNameB: _fontFileNames.Item2,
-            BuiltinFontNameA: Encoding.ASCII.GetBytes(_builtinFontNames.Item1),
-            BuiltinFontNameB: Encoding.ASCII.GetBytes(_builtinFontNames.Item2),
+            BuiltinFontNamesA: _builtinFontNames.Select(tuple => new ReadOnlyMemory<byte>(Encoding.ASCII.GetBytes(tuple.Item1))),
+            BuiltinFontNamesB: _builtinFontNames.Select(tuple => new ReadOnlyMemory<byte>(Encoding.ASCII.GetBytes(tuple.Item2))),
             CustomFontNameA: Encoding.ASCII.GetBytes(_customFontNames.Item1),
             CustomFontNameB: Encoding.ASCII.GetBytes(_customFontNames.Item2)
         );

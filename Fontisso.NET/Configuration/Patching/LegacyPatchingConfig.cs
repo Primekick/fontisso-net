@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Fontisso.NET.Configuration.Patching;
 
@@ -7,8 +8,8 @@ public sealed record LegacyPatchingConfig(
     string FontsDirectory,
     string FontFileNameA,
     string FontFileNameB,
-    ReadOnlyMemory<byte> BuiltinFontNameA,
-    ReadOnlyMemory<byte> BuiltinFontNameB,
+    IEnumerable<ReadOnlyMemory<byte>> BuiltinFontNamesA,
+    IEnumerable<ReadOnlyMemory<byte>> BuiltinFontNamesB,
     ReadOnlyMemory<byte> CustomFontNameA,
     ReadOnlyMemory<byte> CustomFontNameB
 );
