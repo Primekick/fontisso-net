@@ -34,10 +34,12 @@ public partial class ResourceService : IResourceService
     private const uint SHGFI_ICON = 0x100;
     private const uint SHGFI_USEFILEATTRIBUTES = 0x00000010;
     private const uint SHGFI_LARGEICON = 0x00000000;
-    private const uint SHGFI_SMALLICON = 0x00000001;
+    private const uint LOAD_LIBRARY_AS_DATAFILE = 0x00000002;
+    private const int RT_RCDATA = 10;
+    private const int ERROR_NO_MORE_ITEMS = 259;
 
     [DllImport("shell32.dll")]
-    private static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO shfi, uint cbSizeFileInfo, uint uFlags);
+    private static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref ShFileInfo shfi, uint cbSizeFileInfo, uint uFlags);
 
     [DllImport("shell32.dll", CharSet = CharSet.Auto)]
     private static extern IntPtr ExtractIcon(IntPtr hInst, string lpszExeFileName, int nIconIndex);
@@ -50,19 +52,19 @@ public partial class ResourceService : IResourceService
 
     [LibraryImport("kernel32.dll", EntryPoint = "UpdateResourceW", StringMarshalling = StringMarshalling.Utf8, SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    private static partial bool UpdateResource(IntPtr hUpdate, int lpType, int lpName, ushort wLanguage, ReadOnlySpan<byte> lpData, uint cbData);
+    private static partial bool UpdateResource(IntPtr hUpdate, IntPtr lpType, IntPtr lpName, ushort wLanguage, ReadOnlySpan<byte> lpData, uint cbData);
 
     [DllImport("kernel32.dll", SetLastError = true)]
     private static extern bool EndUpdateResource(IntPtr hUpdate, bool fDiscard);
 
-    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
     private static extern bool EnumResourceTypes(IntPtr hModule, EnumResTypeProc lpEnumFunc, IntPtr lParam);
 
-    [DllImport("kernel32.dll", SetLastError = true)]
-    private static extern bool EnumResourceNames(IntPtr hModule, uint lpType, EnumResNameProc lpEnumFunc, IntPtr lParam);
+    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    private static extern bool EnumResourceNames(IntPtr hModule, IntPtr lpType, EnumResNameProc lpEnumFunc, IntPtr lParam);
 
-    [DllImport("kernel32.dll", SetLastError = true)]
-    private static extern bool EnumResourceLanguages(IntPtr hModule, uint lpType, IntPtr lpName, EnumResLangProc lpEnumFunc, IntPtr lParam);
+    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    private static extern bool EnumResourceLanguages(IntPtr hModule, IntPtr lpType, IntPtr lpName, EnumResLangProc lpEnumFunc, IntPtr lParam);
 
     [DllImport("kernel32.dll", SetLastError = true)]
     private static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hFile, uint dwFlags);
@@ -72,15 +74,10 @@ public partial class ResourceService : IResourceService
 
     private delegate bool EnumResTypeProc(IntPtr hModule, IntPtr lpszType, IntPtr lParam);
 
-    private delegate bool EnumResNameProc(IntPtr hModule, uint lpType, IntPtr lpName, IntPtr lParam);
+    private delegate bool EnumResNameProc(IntPtr hModule, IntPtr lpType, IntPtr lpName, IntPtr lParam);
 
-    private delegate bool EnumResLangProc(IntPtr hModule, uint lpType, IntPtr lpName, ushort wIdLanguage,
+    private delegate bool EnumResLangProc(IntPtr hModule, IntPtr lpType, IntPtr lpName, ushort wIdLanguage,
         IntPtr lParam);
-
-
-    private const int RT_RCDATA = 10;
-    private const int ERROR_NO_MORE_ITEMS = 259;
-    private const uint LOAD_LIBRARY_AS_DATAFILE = 0x00000002;
 
     [SupportedOSPlatform("windows")]
     public async Task<AvaloniaBitmap> ExtractIconFromFile(string filePath) => await Task.Run(() =>
@@ -118,7 +115,7 @@ public partial class ResourceService : IResourceService
             throw new Win32Exception(Marshal.GetLastWin32Error(), "LoadLibraryEx failed.");
         }
         
-        var resourcesToRemove = GetResourcesToRemove(libHandle);
+        var resourcesToRemove = FindResources(libHandle, ["#10"], ["#100", "#101"]);
 
         var updateHandle = BeginUpdateResource(filePath, false);
         if (updateHandle == IntPtr.Zero)
@@ -128,7 +125,7 @@ public partial class ResourceService : IResourceService
 
         foreach (var res in resourcesToRemove)
         {
-            if (!UpdateResource(updateHandle, RT_RCDATA, (int)res.Name, res.Language, null, 0))
+            if (!UpdateResource(updateHandle, RT_RCDATA, StringToResource(res.Name), res.Language, null, 0))
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error(), "UpdateResource failed.");
             }
@@ -151,46 +148,59 @@ public partial class ResourceService : IResourceService
         }
     }
 
-    private ICollection<(IntPtr Name, ushort Language)> GetResourcesToRemove(IntPtr libHandle)
+    private ICollection<PEResource> FindResources(
+        IntPtr libHandle,
+        string[]? resourceTypes = null,
+        string[]? resourceNames = null,
+        ushort[]? resourceLanguages = null)
     {
-        var resourcesToRemove = new List<(IntPtr Name, ushort Language)>();
+        resourceTypes ??= [];
+        resourceNames ??= [];
+        resourceLanguages ??= [];
+        var resourcesFound = new List<PEResource>();
 
         try
         {
-
-            EnumResLangProc enumResLangCallback = (_, _, lpName, wIdLanguage, _) =>
+            EnumResTypeProc enumResTypeCallback = (hModule, lpszType, _) =>
             {
-                resourcesToRemove.Add(new(lpName, wIdLanguage));
-                return true;
-            };
-
-            EnumResNameProc enumResNameCallback = (hModule, _, lpName, _) =>
-            {
-                if (lpName != (nint)FontKind.RPG2000 || lpName != (nint)FontKind.RPG2000G)
+                var type = ResourceToString(lpszType);
+                if (!MatchesFilter(type, resourceTypes))
                 {
                     return true;
                 }
                 
-                if (!EnumResourceLanguages(hModule, RT_RCDATA, lpName, enumResLangCallback, IntPtr.Zero))
+                EnumResNameProc enumResNameCallback = (hModuleName, _, lpName, _) =>
                 {
-                    var error = Marshal.GetLastWin32Error();
-                    if (error != ERROR_NO_MORE_ITEMS)
+                    var name = ResourceToString(lpName);
+                    if (!MatchesFilter(name, resourceNames))
                     {
-                        throw new Win32Exception(error, "EnumResourceLanguages failed.");
+                        return true;
                     }
-                }
+                
+                    EnumResLangProc enumResLangCallback = (_, _, _, wIdLanguage, _) =>
+                    {
+                        if (!MatchesLanguage(wIdLanguage, resourceLanguages))
+                        {
+                            return true;
+                        }
+                
+                        resourcesFound.Add(new PEResource(type, name, wIdLanguage));
+                        return true;
+                    };
+                
+                    if (!EnumResourceLanguages(hModuleName, lpszType, lpName, enumResLangCallback, IntPtr.Zero))
+                    {
+                        var error = Marshal.GetLastWin32Error();
+                        if (error != ERROR_NO_MORE_ITEMS)
+                        {
+                            throw new Win32Exception(error, "EnumResourceLanguages failed.");
+                        }
+                    }
 
-                return true;
-            };
-
-            EnumResTypeProc enumResTypeCallback = (hModule, lpszType, _) =>
-            {
-                if (lpszType != RT_RCDATA)
-                {
                     return true;
-                }
+                };
 
-                if (!EnumResourceNames(hModule, RT_RCDATA, enumResNameCallback, IntPtr.Zero))
+                if (!EnumResourceNames(hModule, lpszType, enumResNameCallback, IntPtr.Zero))
                 {
                     var error = Marshal.GetLastWin32Error();
                     if (error != ERROR_NO_MORE_ITEMS)
@@ -211,7 +221,7 @@ public partial class ResourceService : IResourceService
                 }
             }
 
-            return resourcesToRemove;
+            return resourcesFound;
         }
         finally
         {
@@ -219,7 +229,22 @@ public partial class ResourceService : IResourceService
         }
     }
 
-    private OneOf<EngineType, ExtractionError> ExtractEngineVersion(string filePath)
+    private string ResourceToString(IntPtr resource) => IsIntResource(resource)
+        ? "#" + resource.ToInt32()
+        : Marshal.PtrToStringUni(resource)!;
+
+    private IntPtr StringToResource(string resource) =>
+        ushort.Parse(resource[1..], NumberStyles.None, CultureInfo.InvariantCulture);
+
+    // resource IDs are 16bit integers stored in pointer
+    private bool IsIntResource(IntPtr resource) => (resource.ToInt64() >> 16) == 0;
+
+    private bool MatchesFilter(string value, string[] filters) =>
+        filters is [] || filters.Contains(value, StringComparer.OrdinalIgnoreCase);
+
+    private bool MatchesLanguage(ushort lang, ushort[] filters) => filters is [] || filters.Contains(lang);
+
+    private EngineType ExtractModern2k3Engine(string filePath)
     {
         try
         {
@@ -228,12 +253,12 @@ public partial class ResourceService : IResourceService
 
             if (peReader is not { IsEntireImageAvailable: true })
             {
-                return ExtractionError.NotRm2kX;
+                return default;
             }
 
             if (peReader.PEHeaders.CoffHeader is not { } fileHeader)
             {
-                return ExtractionError.NotRm2kX;
+                return default;
             }
 
             // old Maniacs has larger CHERRY section than vanilla
@@ -253,52 +278,75 @@ public partial class ResourceService : IResourceService
         }
         catch (Exception)
         {
-            return ExtractionError.NotRm2kX;
+            return default;
         }
     }
 
-    [SupportedOSPlatform("windows")]
-    public async Task<OneOf<TargetFileData, ExtractionError>> ExtractTargetFileData(string filePath)
+    private EngineType ExtractEngineFromVersionInfo(string filePath, FileVersionInfo versionInfo)
     {
-        var versionInfo = FileVersionInfo.GetVersionInfo(filePath);
-
-        // 2k3 should always have a version info regardless of version
-        if (versionInfo.ProductVersion is null)
-        {
-            return ExtractionError.NotRm2kX;
-        }
-
         // check if it has a valid product version
-        if (VERSION_REGEX.Match(versionInfo.ProductVersion) is not { Success: true } match)
+        if (VERSION_REGEX.Match(versionInfo.ProductVersion ?? string.Empty) is not { Success: true } match)
         {
-            return ExtractionError.NotRm2kX;
+            return default;
         }
 
         if (match.Groups is not [_, var majorVersion, var minorVersion])
         {
-            return ExtractionError.NotRm2kX;
+            return default;
         }
 
         if (!int.TryParse(majorVersion.Value, out var major) || !int.TryParse(minorVersion.Value, out var minor))
         {
-            return ExtractionError.NotRm2kX;
+            return default;
+        }
+            
+        return (major < 1 || minor < 2) switch
+        {
+            true => EngineType.OldVanilla2k3,
+            false => ExtractModern2k3Engine(filePath)
+        };
+    }
+    
+    private EngineType ExtractEngineWithoutVersionInfo(string filePath)
+    {
+        var libHandle = LoadLibraryEx(filePath, IntPtr.Zero, LOAD_LIBRARY_AS_DATAFILE);
+        if (libHandle == IntPtr.Zero)
+        {
+            throw new Win32Exception(Marshal.GetLastWin32Error(), "LoadLibraryEx failed.");
         }
 
-        // only Steam version of 2k3 is patchable
-        if (major < 1 || minor < 2)
+        var logosFound = FindResources(libHandle, ["XYZ"]);
+        return logosFound.Count switch
         {
-            return ExtractionError.EngineTooOld;
-        }
+            // only 2k has 3 logos
+            3 => EngineType.Vanilla2k,
+            // a single logo is most probably 2k3 (not always though)
+            1 => EngineType.OldVanilla2k3,
+            // no idea
+            _ => default
+        };
+    }
 
-        var engine = ExtractEngineVersion(filePath);
-        if (engine.IsT1)
+    [SupportedOSPlatform("windows")]
+    public async Task<TargetFileData> ExtractTargetFileData(string filePath)
+    {
+        var versionInfo = FileVersionInfo.GetVersionInfo(filePath);
+        
+        var engine = versionInfo.ProductVersion switch
         {
-            return engine.AsT1;
+            // turns out 2k and some earlier 2k3 versions don't have VersionInfo embedded 
+            null => ExtractEngineWithoutVersionInfo(filePath),
+            _ => ExtractEngineFromVersionInfo(filePath, versionInfo)
+        };
+        
+        if (engine == default)
+        {
+            return default;
         }
-
-        filePath = engine.AsT0 switch
+        
+        filePath = engine switch
         {
-            EngineType.ModernManiacs => filePath,
+            EngineType.ModernManiacs or EngineType.OldVanilla2k3 or EngineType.Vanilla2k => filePath,
             _ => Path.Combine(Path.GetDirectoryName(filePath)!, "ultimate_rt_eb.dll")
         };
         var fileName = Path.GetFileName(filePath);
@@ -308,7 +356,6 @@ public partial class ResourceService : IResourceService
             TargetFilePath: filePath,
             FileName: fileName,
             FileIcon: fileIcon,
-            HasFile: true,
-            Engine: engine.AsT0);
+            Engine: engine);
     }
 }
