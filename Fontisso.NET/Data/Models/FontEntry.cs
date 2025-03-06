@@ -18,4 +18,9 @@ public enum FontKind
     RPG2000G = 101
 }
 
-public record FontEntry(string Name, string Attribution, ReadOnlyMemory<byte> Rpg2000Data, ReadOnlyMemory<byte> Rpg2000GData);
+public record struct FontEntry(
+    string Name,
+    string Attribution,
+    ReadOnlyMemory<byte> Rpg2000Data,
+    ReadOnlyMemory<byte> Rpg2000GData
+);

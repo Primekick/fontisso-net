@@ -2,15 +2,14 @@
 using Fontisso.NET.Data.Models;
 using Fontisso.NET.Flux;
 using Fontisso.NET.Services;
-using OneOf;
 
 namespace Fontisso.NET.Data.Stores;
 
-public record ExtractTargetFileDataAction(string FilePath) : IAction;
+public record struct ExtractTargetFileDataAction(string FilePath) : IAction;
 
-public record TargetFileState(OneOf<TargetFileData, ExtractionError> FileData)
+public record struct TargetFileState(TargetFileData FileData)
 {
-    public static TargetFileState Default => new(TargetFileData.Default);
+    public static TargetFileState Default => new(default);
 }
 
 public class TargetFileStore : Store<TargetFileState>

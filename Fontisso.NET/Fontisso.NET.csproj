@@ -27,7 +27,6 @@
         <PackageReference Include="Material.Avalonia" Version="3.9.1"/>
         <PackageReference Include="Material.Icons.Avalonia" Version="2.1.11"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1"/>
-        <PackageReference Include="OneOf" Version="3.0.271"/>
         <PackageReference Include="PeNet" Version="4.1.1"/>
         <PackageReference Include="SharpFont" Version="4.0.1"/>
         <PackageReference Include="SharpFont.Dependencies" Version="2.6.0" GeneratePathProperty="true"/>

@@ -2,7 +2,7 @@
 
 namespace Fontisso.NET.Flux;
 
-public abstract class Store<TState> where TState : class 
+public abstract class Store<TState> where TState : struct 
 {
     private TState _state;
     protected TState State => _state;

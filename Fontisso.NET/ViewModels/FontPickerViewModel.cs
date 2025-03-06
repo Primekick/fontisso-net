@@ -25,7 +25,7 @@ public partial class FontPickerViewModel : ViewModelBase, IRecipient<StoreChange
     private ImmutableList<FontEntry> _fonts = ImmutableList<FontEntry>.Empty;
 
     [ObservableProperty]
-    private FontEntry? _selectedFont;
+    private FontEntry _selectedFont;
 
     public FontPickerViewModel(FontStore fontStore)
     {
@@ -44,12 +44,12 @@ public partial class FontPickerViewModel : ViewModelBase, IRecipient<StoreChange
             f.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
             f.Attribution.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
 
-    partial void OnSelectedFontChanged(FontEntry? value)
+    partial void OnSelectedFontChanged(FontEntry value)
     {
-        if (value is not null)
-        {
-            _ = _fontStore.Dispatch(new SelectFontAction(value));
-        }
+        if (value == default)
+            return;
+        
+        _ = _fontStore.Dispatch(new SelectFontAction(value));
     }
 
     [RelayCommand]

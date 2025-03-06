@@ -7,7 +7,6 @@ using Fontisso.NET.Data.Models;
 using Fontisso.NET.Data.Stores;
 using Fontisso.NET.Flux;
 using Fontisso.NET.Services;
-using OneOf;
 
 namespace Fontisso.NET.ViewModels;
 
@@ -20,11 +19,11 @@ public partial class MainWindowViewModel : ViewModelBase, IRecipient<StoreChange
 
     [ObservableProperty] 
     [NotifyCanExecuteChangedFor(nameof(PatchCommand))]
-    private FontEntry? _selectedFont;
+    private FontEntry _selectedFont;
     
     [ObservableProperty] 
     [NotifyCanExecuteChangedFor(nameof(PatchCommand))]
-    private OneOf<TargetFileData, ExtractionError> _fileData;
+    private TargetFileData _fileData;
 
     private readonly IPatchingService _patchingService;
 
@@ -39,12 +38,12 @@ public partial class MainWindowViewModel : ViewModelBase, IRecipient<StoreChange
         WeakReferenceMessenger.Default.Register<StoreChangedMessage<FontStoreState>>(this);
     }
     
-    private bool CanPatch() => SelectedFont is not null && FileData.IsT0 && FileData.AsT0.HasFile;
+    private bool CanPatch() => SelectedFont != default && FileData != default;
 
     [RelayCommand(CanExecute = nameof(CanPatch))]
     private async Task Patch()
     {
-        var patchingResult = _patchingService.PatchExecutable(FileData.AsT0, SelectedFont!.Rpg2000Data, SelectedFont!.Rpg2000GData);
+        var patchingResult = _patchingService.PatchExecutable(FileData, SelectedFont.Rpg2000Data, SelectedFont.Rpg2000GData);
         await DialogHost.Show(patchingResult);
     }
 

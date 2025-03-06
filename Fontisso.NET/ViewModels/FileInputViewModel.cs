@@ -18,7 +18,10 @@ public partial class FileInputViewModel : ViewModelBase, IRecipient<StoreChanged
 {
     private readonly TargetFileStore _targetFileStore;
 
-    [ObservableProperty] private TargetFileData _fileData = TargetFileData.Default;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(HasFileData))]
+    private TargetFileData _fileData;
+
+    public bool HasFileData => FileData != default;
 
     public FileInputViewModel(TargetFileStore targetFileStore)
     {
@@ -55,19 +58,13 @@ public partial class FileInputViewModel : ViewModelBase, IRecipient<StoreChanged
 
     public void Receive(StoreChangedMessage<TargetFileState> message)
     {
-        if (message.State.FileData.IsT1)
+        if (message.State.FileData == default)
         {
-            var errorDescription = message.State.FileData.AsT1 switch
-            {
-                ExtractionError.NotRm2kX => I18n.UI.Error_Not2k3File,
-                ExtractionError.EngineTooOld => I18n.UI.Error_EngineTooOld,
-                _ => throw new UnreachableException()
-            };
-            DialogHost.Show(OperationResult.ErrorResult(errorDescription));
+            DialogHost.Show(OperationResult.ErrorResult(I18n.UI.Error_Not2k3File));
             return;
         }
 
-        FileData = message.State.FileData.AsT0;
+        FileData = message.State.FileData;
     }
 
     private Window? GetActiveWindow() =>

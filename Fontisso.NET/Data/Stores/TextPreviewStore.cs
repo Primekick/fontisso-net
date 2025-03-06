@@ -9,9 +9,9 @@ namespace Fontisso.NET.Data.Stores;
 
 using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
 
-public record SetPreviewWidthAction(double PreviewWidth) : IAction;
+public record struct SetPreviewWidthAction(double PreviewWidth) : IAction;
 
-public record GeneratePreviewImageAction(
+public record struct GeneratePreviewImageAction(
     string Text,
     ReadOnlyMemory<byte> FontData,
     float FontSize,
@@ -19,7 +19,7 @@ public record GeneratePreviewImageAction(
     Color BackgroundColor
 ) : IAction;
 
-public record TextPreviewState(AvaloniaBitmap PreviewImage, double PreviewWidth)
+public record struct TextPreviewState(AvaloniaBitmap PreviewImage, double PreviewWidth)
 {
     public static TextPreviewState Default => new(
         BitmapConverter.CreateBlankAvaloniaBitmap(580, 80, Color.White),

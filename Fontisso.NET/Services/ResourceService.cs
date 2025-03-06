@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection.PortableExecutable;
@@ -11,8 +12,9 @@ using System.Runtime.Versioning;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Fontisso.NET.Data.Models;
+using Fontisso.NET.Data.Models.Metadata;
+using Fontisso.NET.Data.Models.WinApi;
 using Fontisso.NET.Helpers;
-using OneOf;
 
 namespace Fontisso.NET.Services;
 
@@ -22,26 +24,12 @@ public interface IResourceService
 {
     Task<AvaloniaBitmap> ExtractIconFromFile(string filePath);
     void WriteResources(string filePath, ICollection<(FontKind kind, ReadOnlyMemory<byte> data)> resources);
-    Task<OneOf<TargetFileData, ExtractionError>> ExtractTargetFileData(string filePath);
+    Task<TargetFileData> ExtractTargetFileData(string filePath);
 }
 
 public partial class ResourceService : IResourceService
 {
     private static readonly Regex VERSION_REGEX = new(@"1.([01]).(\d{1,2}).\d{1,2}", RegexOptions.Compiled);
-
-    [StructLayout(LayoutKind.Sequential)]
-    private struct SHFILEINFO
-    {
-        public IntPtr hIcon;
-        public int iIcon;
-        public uint dwAttributes;
-
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
-        public string szDisplayName;
-
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
-        public string szTypeName;
-    }
 
     private const uint SHGFI_ICON = 0x100;
     private const uint SHGFI_USEFILEATTRIBUTES = 0x00000010;
@@ -104,8 +92,8 @@ public partial class ResourceService : IResourceService
         {
             const uint flags = SHGFI_USEFILEATTRIBUTES | SHGFI_ICON | SHGFI_LARGEICON;
 
-            var shfi = new SHFILEINFO();
-            SHGetFileInfo(filePath, 0, ref shfi, (uint)Marshal.SizeOf(typeof(SHFILEINFO)), flags);
+            var shfi = new ShFileInfo();
+            SHGetFileInfo(filePath, 0, ref shfi, (uint)Marshal.SizeOf(typeof(ShFileInfo)), flags);
             iconHandle = shfi.hIcon;
         }
 

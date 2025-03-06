@@ -6,13 +6,13 @@ using Fontisso.NET.Services;
 
 namespace Fontisso.NET.Data.Stores;
 
-public record SeedFontsAction() : IAction;
+public record struct SeedFontsAction() : IAction;
 
-public record SelectFontAction(FontEntry Font) : IAction;
+public record struct SelectFontAction(FontEntry Font) : IAction;
 
-public record FontStoreState(ImmutableList<FontEntry> Fonts, FontEntry? SelectedFont)
+public record struct FontStoreState(ImmutableList<FontEntry> Fonts, FontEntry SelectedFont)
 {
-    public static FontStoreState Default => new(ImmutableList<FontEntry>.Empty, null);
+    public static FontStoreState Default => new(ImmutableList<FontEntry>.Empty, default);
 }
 
 public class FontStore : Store<FontStoreState>

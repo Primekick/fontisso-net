@@ -17,7 +17,7 @@ public partial class TextPreviewViewModel : ViewModelBase, IRecipient<StoreChang
 {
     private readonly TextPreviewStore _textPreviewStore;
 
-    private FontEntry? SelectedFont { get; set; }
+    private FontEntry SelectedFont { get; set; }
 
     [ObservableProperty] private string _previewText = I18n.UI.Summary_SampleText;
 
@@ -33,16 +33,16 @@ public partial class TextPreviewViewModel : ViewModelBase, IRecipient<StoreChang
     [RelayCommand]
     private async Task UpdateSampleTextImage()
     {
-        if (SelectedFont is not null)
-        {
-            await _textPreviewStore.Dispatch(new GeneratePreviewImageAction(
-                PreviewText,
-                SelectedFont.Rpg2000Data,
-                12.0f,
-                Color.Black,
-                Color.White
-            ));
-        }
+        if (SelectedFont == default)
+            return;
+        
+        await _textPreviewStore.Dispatch(new GeneratePreviewImageAction(
+            PreviewText,
+            SelectedFont.Rpg2000Data,
+            12.0f,
+            Color.Black,
+            Color.White
+        ));
     }
 
     public async Task UpdatePreviewWidth(double width)
