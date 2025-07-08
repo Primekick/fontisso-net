@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Library</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+        <ZigOutputDll>$(ProjectDir)zig-out\bin\Fontisso.NET.LegacyFontLoader.dll</ZigOutputDll>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <Content Include="build.zig" />
+        <Content Include="main.zig" />
+    </ItemGroup>
+
+    <Target Name="BuildZigDll" BeforeTargets="Build"
+            Inputs="main.zig;build.zig"
+            Outputs="$(ZigOutputDll)">
+        <Message Text="Building legacy font loader with Zig..." Importance="High" />
+        <Exec Command="zig build" WorkingDirectory="$(MSBuildProjectDirectory)" />
+    </Target>
+
+    <Target Name="CleanZigOutput" BeforeTargets="CoreClean">
+        <Message Text="Cleaning legacy font loader files..." Importance="High" />
+        <RemoveDir Directories="$(ProjectDir)zig-out;$(ProjectDir)zig-cache" />
+        <Delete Files="$(SolutionDir)Fontisso.NET\bin\$(Configuration)\$(TargetFramework)\Fontisso.NET.LegacyFontLoader.dll"
+                ContinueOnError="true" />
+    </Target>
+</Project>

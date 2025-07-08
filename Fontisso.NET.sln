@@ -5,12 +5,12 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fontisso.NET", "Fontisso.NET\Fontisso.NET.csproj", "{8954B956-9D30-471E-9BD5-0007583F8CB8}"
     ProjectSection(ProjectDependencies) = postProject
-        {5A854C7A-77A9-4D5F-9042-24BA03ECA002} = {5A854C7A-77A9-4D5F-9042-24BA03ECA002}
+        {DB929163-BA28-49C1-8C79-7F40872FF4D0} = {DB929163-BA28-49C1-8C79-7F40872FF4D0}
     EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fontisso.NET.Flux", "Fontisso.NET.Flux\Fontisso.NET.Flux.csproj", "{B29A2C85-AC15-46B4-BC99-CADB76C4BBAA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Fontisso.NET.LegacyFontLoader", "Fontisso.NET.LegacyFontLoader\Fontisso.NET.LegacyFontLoader.vcxproj", "{5A854C7A-77A9-4D5F-9042-24BA03ECA002}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fontisso.NET.LegacyFontLoader", "Fontisso.NET.LegacyFontLoader\Fontisso.NET.LegacyFontLoader.csproj", "{DB929163-BA28-49C1-8C79-7F40872FF4D0}"
 EndProject
 Global
     GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,10 +28,10 @@ Global
         {B29A2C85-AC15-46B4-BC99-CADB76C4BBAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
         {B29A2C85-AC15-46B4-BC99-CADB76C4BBAA}.Release|Any CPU.Build.0 = Release|Any CPU
         
-        {5A854C7A-77A9-4D5F-9042-24BA03ECA002}.Debug|Any CPU.ActiveCfg = Release|Win32
-        {5A854C7A-77A9-4D5F-9042-24BA03ECA002}.Debug|Any CPU.Build.0 = Release|Win32
-        {5A854C7A-77A9-4D5F-9042-24BA03ECA002}.Release|Any CPU.ActiveCfg = Release|Win32
-        {5A854C7A-77A9-4D5F-9042-24BA03ECA002}.Release|Any CPU.Build.0 = Release|Win32
+        {DB929163-BA28-49C1-8C79-7F40872FF4D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {DB929163-BA28-49C1-8C79-7F40872FF4D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {DB929163-BA28-49C1-8C79-7F40872FF4D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {DB929163-BA28-49C1-8C79-7F40872FF4D0}.Release|Any CPU.Build.0 = Release|Any CPU
     EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
