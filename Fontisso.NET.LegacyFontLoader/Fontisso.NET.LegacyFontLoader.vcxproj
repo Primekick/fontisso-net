@@ -22,12 +22,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ClCompile Include="main.c" />
+    <Content Include="build.zig" />
+    <Content Include="main.zig" />
   </ItemGroup>
 
   <Target Name="Build">
-    <MakeDir Directories="$(ProjectDir)bin\$(Configuration)\net8.0" />
-    <Exec Command="gcc -m32 -s -shared -o &quot;$(ProjectDir)bin\$(Configuration)\net8.0\Fontisso.NET.LegacyFontLoader.dll&quot; main.c -lgdi32 -Os" />
+    <MakeDir Directories="$(ProjectDir)zig-out\bin" />
+    <Exec Command="zig build" />
   </Target>
 
   <Target Name="Clean">
