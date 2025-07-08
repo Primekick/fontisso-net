@@ -28,7 +28,7 @@ public class FontRenderer(SharpFont.Library freetype, ITextLayoutEngine layout) 
         FontRenderOptions options) =>
         await Task.Run(() =>
         {
-            var face = CreateFace(fontData);
+            using var face = CreateFace(fontData);
 
             var initWidth = options.Width / 2;
             const int lineHeight = 16;
