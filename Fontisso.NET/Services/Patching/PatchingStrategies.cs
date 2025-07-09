@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Fontisso.NET.Configuration.Patching;
 using Fontisso.NET.Data.Models;
 using Fontisso.NET.Helpers;
@@ -19,17 +20,19 @@ public sealed class LegacyPatchingStrategy(LegacyPatchingConfig config, IFontMet
 {
     public void Patch(string filePath, ReadOnlyMemory<byte> rpg2000Data, ReadOnlyMemory<byte> rpg2000GData)
     {
+        // dump the loader dll into the game's folder
         var exeRootDir = Path.GetDirectoryName(filePath)!;
-        var currentDir = Directory.GetCurrentDirectory();
-        File.Copy(
-            Path.Combine(currentDir, config.LegacyLoaderDllName),
-            Path.Combine(exeRootDir, config.LegacyLoaderDllName),
-            true
-        );
+        var targetDllFileName = Path.Combine(exeRootDir, config.LegacyLoaderDllName);
+        using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("LegacyFontLoader")!)
+        using (var fileStream = new FileStream(targetDllFileName, FileMode.Create))
+        {
+            stream.CopyTo(fileStream);
+        }
 
+        // before dumping the fonts, change their face name to a pre-set one to match the face name requested by the game
+        Directory.CreateDirectory(Path.Combine(exeRootDir, config.FontsDirectory));
         var customFontDataA = fontMetadata.SetFaceName(rpg2000Data, config.CustomFontNameA.Span);
         var customFontDataB = fontMetadata.SetFaceName(rpg2000GData, config.CustomFontNameB.Span);
-        Directory.CreateDirectory(Path.Combine(exeRootDir, config.FontsDirectory));
         FileExtensions.OpenAndWrite(
             Path.Combine(exeRootDir, config.FontsDirectory, config.FontFileNameA),
             customFontDataA.Span
@@ -38,15 +41,17 @@ public sealed class LegacyPatchingStrategy(LegacyPatchingConfig config, IFontMet
             Path.Combine(exeRootDir, config.FontsDirectory, config.FontFileNameB),
             customFontDataB.Span
         );
-
+        
+        // add dll import with a dummy function target so that the dll gets loaded on game boot
         var peFile = new PeFile(filePath);
         if (peFile.ImportedFunctions!.All(func => func.DLL != config.LegacyLoaderDllName))
         {
             peFile.AddImport(config.LegacyLoaderDllName, "Dummy");
         }
 
+        // sometimes the builtin font names appear more than once in the game binary, hence the looped TryReplace calls
+        // needs more research
         var binary = peFile.RawFile.ToArray().AsSpan();
-        // sometimes the builtin font names appear more than once in the game binary hence the looped replacement calls - needs more research
         foreach (var fontName in config.BuiltinFontNamesA)
         {
             while (binary.TryReplace(fontName.Span, config.CustomFontNameA.Span));
