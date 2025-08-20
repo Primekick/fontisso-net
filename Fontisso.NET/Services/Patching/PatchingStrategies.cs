@@ -33,11 +33,11 @@ public sealed class LegacyPatchingStrategy(LegacyPatchingConfig config, IFontMet
         Directory.CreateDirectory(Path.Combine(exeRootDir, config.FontsDirectory));
         var customFontDataA = fontMetadata.SetFaceName(rpg2000Data, config.CustomFontNameA.Span);
         var customFontDataB = fontMetadata.SetFaceName(rpg2000GData, config.CustomFontNameB.Span);
-        FileExtensions.OpenAndWrite(
+        File.OpenAndWrite(
             Path.Combine(exeRootDir, config.FontsDirectory, config.FontFileNameA),
             customFontDataA.Span
         );
-        FileExtensions.OpenAndWrite(
+        File.OpenAndWrite(
             Path.Combine(exeRootDir, config.FontsDirectory, config.FontFileNameB),
             customFontDataB.Span
         );
@@ -61,7 +61,7 @@ public sealed class LegacyPatchingStrategy(LegacyPatchingConfig config, IFontMet
             while (binary.TryReplace(fontName.Span, config.CustomFontNameB.Span));
         }
         
-        FileExtensions.OpenAndWrite(filePath, binary);
+        File.OpenAndWrite(filePath, binary);
     }
 }
 

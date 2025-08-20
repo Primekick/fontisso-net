@@ -6,10 +6,13 @@ namespace Fontisso.NET.Helpers;
 
 public static class FileExtensions
 {
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void OpenAndWrite(string path, ReadOnlySpan<byte> buffer)
+    extension(File)
     {
-        using var writer = new BinaryWriter(File.Open(path, FileMode.Create));
-        writer.Write(buffer);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void OpenAndWrite(string path, ReadOnlySpan<byte> buffer)
+        {
+            using var writer = new BinaryWriter(File.Open(path, FileMode.Create));
+            writer.Write(buffer);
+        }
     }
 }

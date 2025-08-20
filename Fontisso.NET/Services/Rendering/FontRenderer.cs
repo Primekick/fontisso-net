@@ -94,27 +94,7 @@ public class FontRenderer(SharpFont.Library freetype, ITextLayoutEngine layout) 
                 }
             }
 
-            return BitmapConverter.FromGdiBitmapToAvaloniaBitmap(ScaleBitmap(gdiBitmap, 2.0f));
-        });
-
-    [SupportedOSPlatform("windows")]
-    private static GdiBitmap ScaleBitmap(GdiBitmap sourceBitmap, float scaleFactor)
-    {
-        var newWidth = (int)(sourceBitmap.Width * scaleFactor);
-        var newHeight = (int)(sourceBitmap.Height * scaleFactor);
-
-        var newBitmap = new GdiBitmap(newWidth, newHeight, sourceBitmap.PixelFormat);
-
-        using var graphics = Graphics.FromImage(newBitmap);
-        graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
-        graphics.PixelOffsetMode = PixelOffsetMode.Half;
-
-        graphics.DrawImage(sourceBitmap,
-            new Rectangle(0, 0, newWidth, newHeight),
-            new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height),
-            GraphicsUnit.Pixel);
-
-        return newBitmap;
+        return gdiBitmap.Scale(2.0f).IntoAvaloniaBitmap();
     }
 
     private unsafe SharpFont.Face CreateFace(ReadOnlyMemory<byte> fontData) =>

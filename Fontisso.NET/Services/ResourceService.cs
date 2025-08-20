@@ -99,7 +99,7 @@ public partial class ResourceService : IResourceService
             using var icon = Icon.FromHandle(iconHandle);
             using var gdiBitmap = icon.ToBitmap();
 
-            return BitmapConverter.FromGdiBitmapToAvaloniaBitmap(gdiBitmap);
+            return gdiBitmap.IntoAvaloniaBitmap();
         }
         finally
         {

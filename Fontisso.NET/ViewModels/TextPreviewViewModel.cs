@@ -21,7 +21,7 @@ public partial class TextPreviewViewModel : ViewModelBase, IRecipient<StoreChang
 
     [ObservableProperty] private string _previewText = I18n.UI.Summary_SampleText;
 
-    [ObservableProperty] private AvaloniaBitmap _previewImage = BitmapConverter.CreateBlankAvaloniaBitmap(580, 80, Color.White);
+    [ObservableProperty] private AvaloniaBitmap _previewImage = AvaloniaBitmap.CreateBlankAvaloniaBitmap(580, 80, Color.White);
 
     public TextPreviewViewModel(TextPreviewStore textPreviewStore)
     {

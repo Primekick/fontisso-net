@@ -22,7 +22,7 @@ public record struct GeneratePreviewImageAction(
 public record struct TextPreviewState(AvaloniaBitmap PreviewImage, double PreviewWidth)
 {
     public static TextPreviewState Default => new(
-        BitmapConverter.CreateBlankAvaloniaBitmap(580, 80, Color.White),
+        AvaloniaBitmap.CreateBlankAvaloniaBitmap(580, 80, Color.White),
         580
     );
 }
