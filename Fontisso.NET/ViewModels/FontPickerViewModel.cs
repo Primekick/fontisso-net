@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -31,7 +30,7 @@ public partial class FontPickerViewModel : ViewModelBase, IRecipient<StoreChange
     {
         _fontStore = fontStore;
         WeakReferenceMessenger.Default.Register(this);
-        LoadFontsCommand.ExecuteAsync(null);
+        LoadFonts();
     }
 
     public void Receive(StoreChangedMessage<FontStoreState> message)
@@ -49,12 +48,12 @@ public partial class FontPickerViewModel : ViewModelBase, IRecipient<StoreChange
         if (value == default)
             return;
         
-        _ = _fontStore.Dispatch(new SelectFontAction(value));
+        _fontStore.Dispatch(new SelectFontAction(value));
     }
 
     [RelayCommand]
-    private async Task LoadFonts()
+    private void LoadFonts()
     {
-        await _fontStore.Dispatch(new SeedFontsAction());
+        _fontStore.Dispatch(new SeedFontsAction());
     }
 }

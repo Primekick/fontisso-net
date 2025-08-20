@@ -1,9 +1,7 @@
-﻿using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -37,22 +35,19 @@ public partial class FileInputViewModel : ViewModelBase, IRecipient<StoreChanged
             return;
         }
 
-        var selectedFiles = await window.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-        {
-            AllowMultiple = false,
-        });
+        var selectedFiles = await window.StorageProvider.OpenFilePickerAsync(new() { AllowMultiple = false });
 
         if (selectedFiles is { Count: > 0 })
         {
-            await _targetFileStore.Dispatch(new ExtractTargetFileDataAction(selectedFiles[0].Path.LocalPath));
+            _targetFileStore.Dispatch(new ExtractTargetFileDataAction(selectedFiles[0].Path.LocalPath));
         }
     }
 
-    public async Task HandleDroppedFileAsync(string[] selectedFiles)
+    public void HandleDroppedFileAsync(string[] selectedFiles)
     {
         if (selectedFiles is { Length: > 0 })
         {
-            await _targetFileStore.Dispatch(new ExtractTargetFileDataAction(selectedFiles[0]));
+            _targetFileStore.Dispatch(new ExtractTargetFileDataAction(selectedFiles[0]));
         }
     }
 

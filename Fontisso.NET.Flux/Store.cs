@@ -19,5 +19,5 @@ public abstract class Store<TState> where TState : struct
         WeakReferenceMessenger.Default.Send(new StoreChangedMessage<TState>(_state));
     }
     
-    public abstract Task Dispatch(IAction action);
+    public abstract void Dispatch(IAction action);
 }

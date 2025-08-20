@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Fontisso.NET.ViewModels;
@@ -27,7 +26,7 @@ public partial class FileInputView : UserControl
         }
     }
 
-    private async Task Drop(object sender, DragEventArgs dragEvent)
+    private void Drop(object? sender, DragEventArgs dragEvent)
     {
         if (!dragEvent.Data.Contains(DataFormats.Files))
         {
@@ -37,7 +36,7 @@ public partial class FileInputView : UserControl
         var files = dragEvent.Data.GetFiles();
         if (DataContext is FileInputViewModel viewModel && files is not null)
         {
-            await viewModel.HandleDroppedFileAsync(files.Select(file => file.Path.LocalPath).ToArray());
+            viewModel.HandleDroppedFileAsync(files.Select(file => file.Path.LocalPath).ToArray());
         }
     }
 }

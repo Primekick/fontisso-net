@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Fontisso.NET.Data.Models;
+﻿using Fontisso.NET.Data.Models;
 using Fontisso.NET.Flux;
 using Fontisso.NET.Services;
 
@@ -21,16 +20,13 @@ public class TargetFileStore : Store<TargetFileState>
         _resourceService = resourceService;
     }
 
-    public override async Task Dispatch(IAction action)
+    public override void Dispatch(IAction action)
     {
         switch (action)
         {
             case ExtractTargetFileDataAction etfda:
-                var targetFileData = await _resourceService.ExtractTargetFileData(etfda.FilePath);
-                SetState(state => state with { FileData = targetFileData });
+                SetState(state => state with { FileData = _resourceService.ExtractTargetFileData(etfda.FilePath) });
                 break;
         }
-
-        await Task.CompletedTask;
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Threading.Tasks;
 using Fontisso.NET.Data.Models;
 using Fontisso.NET.Flux;
 using Fontisso.NET.Services;
@@ -24,19 +23,16 @@ public class FontStore : Store<FontStoreState>
         _fontService = fontService;
     }
     
-    public override async Task Dispatch(IAction action)
+    public override void Dispatch(IAction action)
     {
         switch (action)
         {
             case SeedFontsAction seed:
-                var fonts = await _fontService.LoadAvailableFonts();
-                SetState(state => state with { Fonts = fonts });
+                SetState(state => state with { Fonts = _fontService.LoadAvailableFonts() });
                 break;
             case SelectFontAction select:
                 SetState(state => state with { SelectedFont = select.Font });
                 break;
         }
-
-        await Task.CompletedTask;
     }
 }

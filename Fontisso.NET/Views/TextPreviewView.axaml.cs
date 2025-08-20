@@ -10,11 +10,11 @@ public partial class TextPreviewView : UserControl
         InitializeComponent();
     }
     
-    private async void PreviewContainer_SizeChanged(object sender, SizeChangedEventArgs e)
+    private void PreviewContainer_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (DataContext is TextPreviewViewModel viewModel)
         {
-            await viewModel.UpdatePreviewWidth(e.NewSize.Width);
+            viewModel.UpdatePreviewWidth(e.NewSize.Width);
         }
     }
 }

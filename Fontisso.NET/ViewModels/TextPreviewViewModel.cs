@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -31,12 +30,12 @@ public partial class TextPreviewViewModel : ViewModelBase, IRecipient<StoreChang
     }
 
     [RelayCommand]
-    private async Task UpdateSampleTextImage()
+    private void UpdateSampleTextImage()
     {
         if (SelectedFont == default)
             return;
         
-        await _textPreviewStore.Dispatch(new GeneratePreviewImageAction(
+        _textPreviewStore.Dispatch(new GeneratePreviewImageAction(
             PreviewText,
             SelectedFont.Rpg2000Data,
             12.0f,
@@ -45,9 +44,9 @@ public partial class TextPreviewViewModel : ViewModelBase, IRecipient<StoreChang
         ));
     }
 
-    public async Task UpdatePreviewWidth(double width)
+    public void UpdatePreviewWidth(double width)
     {
-        await _textPreviewStore.Dispatch(new SetPreviewWidthAction(width));
+        _textPreviewStore.Dispatch(new SetPreviewWidthAction(width));
     }
 
     public void Receive(StoreChangedMessage<FontStoreState> message)

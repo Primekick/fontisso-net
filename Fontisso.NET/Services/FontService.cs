@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Linq;
 using Fontisso.NET.Helpers;
 using System.Text;
-using System.Threading.Tasks;
 using Avalonia.Platform;
 using Fontisso.NET.Data.Models;
 using Fontisso.NET.Data.Models.Rendering;
@@ -18,10 +17,10 @@ namespace Fontisso.NET.Services;
 
 public interface IFontService
 {
-    Task<AvaloniaBitmap> RenderTextToAvaloniaBitmapAsync(string text, ReadOnlyMemory<byte> fontData, float fontSize, Color textColor,
+    AvaloniaBitmap RenderTextToAvaloniaBitmap(string text, ReadOnlyMemory<byte> fontData, float fontSize, Color textColor,
         Color backgroundColor, int width);
 
-    Task<ImmutableList<FontEntry>> LoadAvailableFonts();
+    ImmutableList<FontEntry> LoadAvailableFonts();
 }
 
 public sealed class FontService : IFontService
@@ -38,13 +37,13 @@ public sealed class FontService : IFontService
         _fontMetadata = fontMetadata;
     }
 
-    public async Task<AvaloniaBitmap> RenderTextToAvaloniaBitmapAsync(string text,
+    public AvaloniaBitmap RenderTextToAvaloniaBitmap(string text,
         ReadOnlyMemory<byte> fontData,
         float fontSize,
         Color textColor,
         Color backgroundColor,
         int width) =>
-        await _renderer.RenderTextToAvaloniaBitmapAsync(
+        _renderer.RenderTextToAvaloniaBitmap(
             text,
             fontData,
             new FontRenderOptions(
@@ -55,8 +54,8 @@ public sealed class FontService : IFontService
             )
         );
 
-    public async Task<ImmutableList<FontEntry>> LoadAvailableFonts() =>
-        await Task.Run(() => _fontUris
+    public ImmutableList<FontEntry> LoadAvailableFonts() =>
+        _fontUris
             .Select(uri => AssetLoader.Open(uri).ReadToByteArray())
             .Select(data => new FontEntry(
                 _fontMetadata.ExtractModuleName(data),
@@ -64,5 +63,5 @@ public sealed class FontService : IFontService
                 _fontMetadata.SetFaceName(data, FontKind.RPG2000.AsByteSpan()),
                 _fontMetadata.SetFaceName(data, FontKind.RPG2000G.AsByteSpan())
             ))
-            .ToImmutableList());
+            .ToImmutableList();
 }

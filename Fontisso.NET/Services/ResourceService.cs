@@ -10,7 +10,6 @@ using System.Reflection.PortableExecutable;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Fontisso.NET.Data.Models;
 using Fontisso.NET.Data.Models.Metadata;
 using Fontisso.NET.Data.Models.WinApi;
@@ -22,9 +21,9 @@ using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
 
 public interface IResourceService
 {
-    Task<AvaloniaBitmap> ExtractIconFromFile(string filePath);
-    void WriteResources(string filePath, ICollection<(FontKind kind, ReadOnlyMemory<byte> data)> resources);
-    Task<TargetFileData> ExtractTargetFileData(string filePath);
+    AvaloniaBitmap ExtractIconFromFile(string filePath);
+    void WriteResources(string filePath, IEnumerable<(FontKind kind, ReadOnlyMemory<byte> data)> resources);
+    TargetFileData ExtractTargetFileData(string filePath);
 }
 
 public partial class ResourceService : IResourceService
@@ -80,7 +79,7 @@ public partial class ResourceService : IResourceService
         IntPtr lParam);
 
     [SupportedOSPlatform("windows")]
-    public async Task<AvaloniaBitmap> ExtractIconFromFile(string filePath) => await Task.Run(() =>
+    public AvaloniaBitmap ExtractIconFromFile(string filePath)
     {
         var iconHandle = ExtractIcon(IntPtr.Zero, filePath, 0);
 
@@ -105,9 +104,9 @@ public partial class ResourceService : IResourceService
         {
             DestroyIcon(iconHandle);
         }
-    });
+    }
 
-    public void WriteResources(string filePath, ICollection<(FontKind kind, ReadOnlyMemory<byte> data)> resources)
+    public void WriteResources(string filePath, IEnumerable<(FontKind kind, ReadOnlyMemory<byte> data)> resources)
     {
         var libHandle = LoadLibraryEx(filePath, IntPtr.Zero, LOAD_LIBRARY_AS_DATAFILE);
         if (libHandle == IntPtr.Zero)
@@ -148,7 +147,7 @@ public partial class ResourceService : IResourceService
         }
     }
 
-    private ICollection<PEResource> FindResources(
+    private List<PEResource> FindResources(
         IntPtr libHandle,
         string[]? resourceTypes = null,
         string[]? resourceNames = null,
@@ -328,7 +327,7 @@ public partial class ResourceService : IResourceService
     }
 
     [SupportedOSPlatform("windows")]
-    public async Task<TargetFileData> ExtractTargetFileData(string filePath)
+    public TargetFileData ExtractTargetFileData(string filePath)
     {
         var versionInfo = FileVersionInfo.GetVersionInfo(filePath);
         
@@ -350,7 +349,7 @@ public partial class ResourceService : IResourceService
             _ => Path.Combine(Path.GetDirectoryName(filePath)!, "ultimate_rt_eb.dll")
         };
         var fileName = Path.GetFileName(filePath);
-        var fileIcon = await ExtractIconFromFile(filePath);
+        var fileIcon = ExtractIconFromFile(filePath);
 
         return new TargetFileData(
             TargetFilePath: filePath,

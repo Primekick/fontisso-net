@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Threading.Tasks;
 using Fontisso.NET.Flux;
 using Fontisso.NET.Helpers;
 using Fontisso.NET.Services;
@@ -36,12 +35,12 @@ public class TextPreviewStore : Store<TextPreviewState>
         _fontService = fontService;
     }
 
-    public override async Task Dispatch(IAction action)
+    public override void Dispatch(IAction action)
     {
         switch (action)
         {
             case GeneratePreviewImageAction gpia:
-                var previewImage = await _fontService.RenderTextToAvaloniaBitmapAsync(gpia.Text, gpia.FontData, gpia.FontSize,
+                var previewImage = _fontService.RenderTextToAvaloniaBitmap(gpia.Text, gpia.FontData, gpia.FontSize,
                     gpia.TextColor, gpia.BackgroundColor, (int)State.PreviewWidth);
                 SetState(state => state with { PreviewImage = previewImage });
                 break;
@@ -49,7 +48,5 @@ public class TextPreviewStore : Store<TextPreviewState>
                 SetState(state => state with { PreviewWidth = spwa.PreviewWidth });
                 break;
         }
-
-        await Task.CompletedTask;
     }
 }
