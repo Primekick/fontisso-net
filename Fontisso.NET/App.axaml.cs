@@ -4,7 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Fontisso.NET.Modules.Composition;
+using Fontisso.NET.Modules;
 using Fontisso.NET.ViewModels;
 using Fontisso.NET.Views;
 using Microsoft.Extensions.DependencyInjection;

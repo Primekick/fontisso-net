@@ -8,11 +8,11 @@ using CommunityToolkit.Mvvm.Messaging;
 using DialogHostAvalonia;
 using Fontisso.NET.Data.Models;
 using Fontisso.NET.Data.Stores;
-using Fontisso.NET.Modules.Flux;
+using Fontisso.NET.Modules;
 
 namespace Fontisso.NET.ViewModels;
 
-public partial class FileInputViewModel : ViewModelBase, IRecipient<StoreChangedMessage<TargetFileState>>
+public partial class FileInputViewModel : ViewModelBase, IRecipient<Flux.StoreChangedMessage<TargetFileState>>
 {
     private readonly TargetFileStore _targetFileStore;
 
@@ -51,7 +51,7 @@ public partial class FileInputViewModel : ViewModelBase, IRecipient<StoreChanged
         }
     }
 
-    public void Receive(StoreChangedMessage<TargetFileState> message)
+    public void Receive(Flux.StoreChangedMessage<TargetFileState> message)
     {
         if (message.State.FileData == default)
         {

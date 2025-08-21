@@ -2,32 +2,27 @@
 using Fontisso.NET.Data.Models;
 using Fontisso.NET.Data.Stores;
 using Fontisso.NET.Services;
-using Fontisso.NET.Services.Metadata;
 using Fontisso.NET.Services.Patching;
-using Fontisso.NET.Services.Rendering;
 using Fontisso.NET.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Fontisso.NET.Modules.Composition;
+namespace Fontisso.NET.Modules;
 
 public static class Composition
 {
     public static ServiceProvider BuildFontissoApp(this IServiceCollection services)
     {
-        services.AddSingleton<FontStore>()
-            .AddSingleton<TextPreviewStore>()
+        services
+            .AddSingleton<Fonts.FontStore>()
+            .AddSingleton<Fonts.TextPreviewStore>()
             .AddSingleton<TargetFileStore>();
+
+        services
+            .AddSingleton<IResourceService, ResourceService>()
+            .AddSingleton<IPatchingService, PatchingService>();
         
         services
-            .AddSingleton<IFontService, FontService>()
-            .AddSingleton<IResourceService, ResourceService>()
-            .AddSingleton<IFontRenderer, FontRenderer>()
-            .AddSingleton<ITextLayoutEngine, TextLayoutEngine>()
-            .AddSingleton<IFontMetadataProcessor, FontMetadataProcessor>()
-            .AddSingleton<IPatchingService, PatchingService>()
-            .AddSingleton<SharpFont.Library>(_ => new SharpFont.Library());
-        
-        services.AddKeyedSingleton<IPatchingStrategy, LegacyPatchingStrategy>("legacy")
+            .AddKeyedSingleton<IPatchingStrategy, LegacyPatchingStrategy>("legacy")
             .AddKeyedSingleton<IPatchingStrategy, ModernPatchingStrategy>("modern")
             .AddSingleton(sp => new PatchingStrategyContext([
                 new EnginePatchingMapping(
@@ -40,7 +35,8 @@ public static class Composition
                 )
             ]));
         
-        services.AddSingleton<FileInputViewModel>()
+        services
+            .AddSingleton<FileInputViewModel>()
             .AddSingleton<FontPickerViewModel>()
             .AddSingleton<TextPreviewViewModel>()
             .AddSingleton<MainWindowViewModel>();

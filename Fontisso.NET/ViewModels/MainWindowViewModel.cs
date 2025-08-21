@@ -5,13 +5,13 @@ using CommunityToolkit.Mvvm.Messaging;
 using DialogHostAvalonia;
 using Fontisso.NET.Data.Models;
 using Fontisso.NET.Data.Stores;
-using Fontisso.NET.Modules.Flux;
+using Fontisso.NET.Modules;
 using Fontisso.NET.Services;
 
 namespace Fontisso.NET.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase, IRecipient<StoreChangedMessage<TargetFileState>>,
-    IRecipient<StoreChangedMessage<FontStoreState>>
+public partial class MainWindowViewModel : ViewModelBase, IRecipient<Flux.StoreChangedMessage<TargetFileState>>,
+    IRecipient<Flux.StoreChangedMessage<Fonts.FontStoreState>>
 {
     [ObservableProperty] private FileInputViewModel _fileInput;
     [ObservableProperty] private FontPickerViewModel _fontPicker;
@@ -19,7 +19,7 @@ public partial class MainWindowViewModel : ViewModelBase, IRecipient<StoreChange
 
     [ObservableProperty] 
     [NotifyCanExecuteChangedFor(nameof(PatchCommand))]
-    private FontEntry _selectedFont;
+    private Fonts.FontEntry _selectedFont;
     
     [ObservableProperty] 
     [NotifyCanExecuteChangedFor(nameof(PatchCommand))]
@@ -34,8 +34,8 @@ public partial class MainWindowViewModel : ViewModelBase, IRecipient<StoreChange
         FileInput = fileInput;
         FontPicker = fontPicker;
         TextPreview = textPreview;
-        WeakReferenceMessenger.Default.Register<StoreChangedMessage<TargetFileState>>(this);
-        WeakReferenceMessenger.Default.Register<StoreChangedMessage<FontStoreState>>(this);
+        WeakReferenceMessenger.Default.Register<Flux.StoreChangedMessage<TargetFileState>>(this);
+        WeakReferenceMessenger.Default.Register<Flux.StoreChangedMessage<Fonts.FontStoreState>>(this);
     }
     
     private bool CanPatch() => SelectedFont != default && FileData != default;
@@ -43,16 +43,16 @@ public partial class MainWindowViewModel : ViewModelBase, IRecipient<StoreChange
     [RelayCommand(CanExecute = nameof(CanPatch))]
     private async Task Patch()
     {
-        var patchingResult = _patchingService.PatchExecutable(FileData, SelectedFont.Rpg2000Data.Span, SelectedFont.Rpg2000GData.Span);
+        var patchingResult = _patchingService.PatchExecutable(FileData, SelectedFont.DataRpg2000, SelectedFont.DataRpg2000G);
         await DialogHost.Show(patchingResult);
     }
 
-    public void Receive(StoreChangedMessage<TargetFileState> message)
+    public void Receive(Flux.StoreChangedMessage<TargetFileState> message)
     {
         FileData = message.State.FileData;
     }
 
-    public void Receive(StoreChangedMessage<FontStoreState> message)
+    public void Receive(Flux.StoreChangedMessage<Fonts.FontStoreState> message)
     {
         SelectedFont = message.State.SelectedFont;
     }

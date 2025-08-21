@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fontisso.NET.Modules.Patching;
+namespace Fontisso.NET.Modules;
 
 public static class Patching
 {

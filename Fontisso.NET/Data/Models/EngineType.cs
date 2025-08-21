@@ -23,6 +23,6 @@ public static class EngineTypeConverter
             EngineType.Vanilla2k => I18n.UI.EngineType_Vanilla2k,
             EngineType.OldManiacs => I18n.UI.EngineType_OldManiacs,
             EngineType.ModernManiacs => I18n.UI.EngineType_ModernManiacs,
-            _ => throw new UnreachableException()
+            _ => "Unknown"
         });
 }

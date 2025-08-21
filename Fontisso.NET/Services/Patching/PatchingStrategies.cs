@@ -2,9 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Fontisso.NET.Modules.Extensions;
-using Fontisso.NET.Modules.Fonts;
-using Fontisso.NET.Services.Metadata;
+using Fontisso.NET.Modules;
 using PeNet;
 
 namespace Fontisso.NET.Services.Patching;
@@ -14,12 +12,11 @@ public interface IPatchingStrategy
     void Patch(string filePath, ReadOnlySpan<byte> rpg2000Data, ReadOnlySpan<byte> rpg2000GData);
 }
 
-public sealed class LegacyPatchingStrategy(IFontMetadataProcessor fontMetadata)
-    : IPatchingStrategy
+public sealed class LegacyPatchingStrategy() : IPatchingStrategy
 {
     public void Patch(string filePath, ReadOnlySpan<byte> rpg2000Data, ReadOnlySpan<byte> rpg2000GData)
     {
-        var config = Modules.Patching.Patching.LegacyPatchingConfig.Value;
+        var config = Modules.Patching.LegacyPatchingConfig.Value;
         // dump the loader dll into the game's folder
         var exeRootDir = Path.GetDirectoryName(filePath)!;
         var targetDllFileName = Path.Combine(exeRootDir, config.DllName);
@@ -31,8 +28,8 @@ public sealed class LegacyPatchingStrategy(IFontMetadataProcessor fontMetadata)
 
         // before dumping the fonts, change their face name to a pre-set one to match the face name requested by the game
         Directory.CreateDirectory(Path.Combine(exeRootDir, config.FontsDir));
-        var dataSlotA = fontMetadata.SetFaceName(rpg2000Data, config.SlotA.Face);
-        var dataSlotB = fontMetadata.SetFaceName(rpg2000GData, config.SlotB.Face);
+        var dataSlotA = Fonts.Metadata.ApplyFaceName(rpg2000Data, config.SlotA.Face);
+        var dataSlotB = Fonts.Metadata.ApplyFaceName(rpg2000GData, config.SlotB.Face);
         File.WriteAllBytes(
             Path.Combine(exeRootDir, config.FontsDir, config.SlotA.FileName),
             dataSlotA
@@ -65,7 +62,7 @@ public sealed class ModernPatchingStrategy(IResourceService resourceService) : I
 {
     public void Patch(string filePath, ReadOnlySpan<byte> rpg2000Data, ReadOnlySpan<byte> rpg2000GData)
     {
-        var resources = new (Fonts.FontKind kind, ReadOnlyMemory<byte> data)[] { (Fonts.FontKind.RPG2000, rpg2000Data.ToArray()), (Fonts.FontKind.RPG2000G, rpg2000GData.ToArray()) };
+        var resources = new (Fonts.FontKind kind, ReadOnlyMemory<byte> data)[] { (Fonts.FontKind.Rpg2000, rpg2000Data.ToArray()), (Fonts.FontKind.Rpg2000G, rpg2000GData.ToArray()) };
         resourceService.WriteResources(filePath, resources);
     }
 }

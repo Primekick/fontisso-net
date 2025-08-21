@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 using Fontisso.NET.Data.Models;
 using Fontisso.NET.Data.Models.Metadata;
 using Fontisso.NET.Data.Models.WinApi;
-using Fontisso.NET.Modules.Extensions;
+using Fontisso.NET.Modules;
 
 namespace Fontisso.NET.Services;
 
@@ -22,7 +22,7 @@ using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
 public interface IResourceService
 {
     AvaloniaBitmap ExtractIconFromFile(string filePath);
-    void WriteResources(string filePath, IEnumerable<(FontKind kind, ReadOnlyMemory<byte> data)> resources);
+    void WriteResources(string filePath, IEnumerable<(Fonts.FontKind kind, ReadOnlyMemory<byte> data)> resources);
     TargetFileData ExtractTargetFileData(string filePath);
 }
 
@@ -106,7 +106,7 @@ public partial class ResourceService : IResourceService
         }
     }
 
-    public void WriteResources(string filePath, IEnumerable<(FontKind kind, ReadOnlyMemory<byte> data)> resources)
+    public void WriteResources(string filePath, IEnumerable<(Fonts.FontKind kind, ReadOnlyMemory<byte> data)> resources)
     {
         var libHandle = LoadLibraryEx(filePath, IntPtr.Zero, LOAD_LIBRARY_AS_DATAFILE);
         if (libHandle == IntPtr.Zero)

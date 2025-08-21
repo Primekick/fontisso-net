@@ -6,7 +6,7 @@ using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using System.Runtime.CompilerServices;
 
-namespace Fontisso.NET.Modules.Extensions;
+namespace Fontisso.NET.Modules;
 
 using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
 using GdiBitmap = System.Drawing.Bitmap;

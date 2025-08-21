@@ -1,28 +1,31 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.Messaging;
 
-namespace Fontisso.NET.Modules.Flux;
+namespace Fontisso.NET.Modules;
 
-public interface IAction {}
-    
-public record StoreChangedMessage<TState>(TState State);
-    
-public abstract class Store<TState> where TState : struct 
+public static class Flux
 {
-    private TState _state;
-    protected TState State => _state;
+    public interface IAction { }
 
-    protected Store(TState initialState)
-    {
-        _state = initialState;
-        WeakReferenceMessenger.Default.Send(new StoreChangedMessage<TState>(_state));
-    }
+    public record StoreChangedMessage<TState>(TState State);
 
-    protected void SetState(Func<TState, TState> updateFunc)
+    public abstract class Store<TState> where TState : struct
     {
-        _state = updateFunc(_state);
-        WeakReferenceMessenger.Default.Send(new StoreChangedMessage<TState>(_state));
+        private TState _state;
+        protected TState State => _state;
+
+        protected Store(TState initialState)
+        {
+            _state = initialState;
+            WeakReferenceMessenger.Default.Send(new StoreChangedMessage<TState>(_state));
+        }
+
+        protected void SetState(Func<TState, TState> updateFunc)
+        {
+            _state = updateFunc(_state);
+            WeakReferenceMessenger.Default.Send(new StoreChangedMessage<TState>(_state));
+        }
+
+        public abstract void Dispatch(IAction action);
     }
-    
-    public abstract void Dispatch(IAction action);
 }
