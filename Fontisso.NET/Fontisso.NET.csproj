@@ -62,10 +62,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Fontisso.NET.Flux\Fontisso.NET.Flux.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <EmbeddedResource Include="..\Fontisso.NET.LegacyFontLoader\zig-out\bin\Fontisso.NET.LegacyFontLoader.dll">
             <LogicalName>LegacyFontLoader</LogicalName>
         </EmbeddedResource>

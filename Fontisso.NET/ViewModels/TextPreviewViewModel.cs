@@ -4,8 +4,8 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Fontisso.NET.Data.Models;
 using Fontisso.NET.Data.Stores;
-using Fontisso.NET.Flux;
 using Fontisso.NET.Modules.Extensions;
+using Fontisso.NET.Modules.Flux;
 
 namespace Fontisso.NET.ViewModels;
 

@@ -1,5 +1,5 @@
 ﻿using Fontisso.NET.Data.Models;
-using Fontisso.NET.Flux;
+using Fontisso.NET.Modules.Flux;
 using Fontisso.NET.Services;
 
 namespace Fontisso.NET.Data.Stores;

@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using DialogHostAvalonia;
 using Fontisso.NET.Data.Models;
 using Fontisso.NET.Data.Stores;
-using Fontisso.NET.Flux;
+using Fontisso.NET.Modules.Flux;
 
 namespace Fontisso.NET.ViewModels;
 

@@ -1,7 +1,12 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using System;
+using CommunityToolkit.Mvvm.Messaging;
 
-namespace Fontisso.NET.Flux;
+namespace Fontisso.NET.Modules.Flux;
 
+public interface IAction {}
+    
+public record StoreChangedMessage<TState>(TState State);
+    
 public abstract class Store<TState> where TState : struct 
 {
     private TState _state;
