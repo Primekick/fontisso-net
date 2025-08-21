@@ -24,11 +24,6 @@ public partial class App : Application
         
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            ViewLocator.Register<MainWindowViewModel, MainWindow>();
-            ViewLocator.Register<FileInputViewModel, FileInputView>();
-            ViewLocator.Register<FontPickerViewModel, FontPickerView>();
-            ViewLocator.Register<TextPreviewViewModel, TextPreviewView>();
-            
             // Line below is needed to remove Avalonia data validation.
             // Without this line you will get duplicate validations from both Avalonia and CT
             BindingPlugins.DataValidators.RemoveAt(0);
