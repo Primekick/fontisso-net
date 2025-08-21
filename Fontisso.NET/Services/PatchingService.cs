@@ -8,14 +8,14 @@ namespace Fontisso.NET.Services;
 
 public interface IPatchingService
 {
-    OperationResult PatchExecutable(TargetFileData tfd, ReadOnlyMemory<byte> rpg2000Data,
-        ReadOnlyMemory<byte> rpg2000GData);
+    OperationResult PatchExecutable(TargetFileData tfd, ReadOnlySpan<byte> rpg2000Data,
+        ReadOnlySpan<byte> rpg2000GData);
 }
 
 public class PatchingService(PatchingStrategyContext strategyContext) : IPatchingService
 {
-    public OperationResult PatchExecutable(TargetFileData tfd, ReadOnlyMemory<byte> rpg2000Data,
-        ReadOnlyMemory<byte> rpg2000GData)
+    public OperationResult PatchExecutable(TargetFileData tfd, ReadOnlySpan<byte> rpg2000Data,
+        ReadOnlySpan<byte> rpg2000GData)
     {
         if (!File.Exists(tfd.TargetFilePath))
         {

@@ -63,19 +63,6 @@ public static class BitmapExtensions
     }
 }
 
-public static class FileExtensions
-{
-    extension(File)
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void OpenAndWrite(string path, ReadOnlySpan<byte> buffer)
-        {
-            using var writer = new BinaryWriter(File.Open(path, FileMode.Create));
-            writer.Write(buffer);
-        }
-    }
-}
-
 public static class SpanExtensions
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

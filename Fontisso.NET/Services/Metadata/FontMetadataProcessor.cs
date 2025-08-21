@@ -7,7 +7,7 @@ public interface IFontMetadataProcessor
 {
     string ExtractModuleName(ReadOnlySpan<byte> data);
     string ExtractAttribution(ReadOnlySpan<byte> data);
-    ReadOnlyMemory<byte> SetFaceName(ReadOnlyMemory<byte> data, ReadOnlySpan<byte> newName);
+    ReadOnlySpan<byte> SetFaceName(ReadOnlySpan<byte> data, ReadOnlySpan<byte> newName);
 }
 
 public sealed class FontMetadataProcessor : IFontMetadataProcessor
@@ -28,7 +28,7 @@ public sealed class FontMetadataProcessor : IFontMetadataProcessor
             var offset => Encoding.ASCII.GetString(data.Slice(offset + 0x6, 60)).Trim()
         };
 
-    public ReadOnlyMemory<byte> SetFaceName(ReadOnlyMemory<byte> data, ReadOnlySpan<byte> newName)
+    public ReadOnlySpan<byte> SetFaceName(ReadOnlySpan<byte> data, ReadOnlySpan<byte> newName)
     {
         var newData = data.ToArray();
         var dataSpan = newData.AsSpan();

@@ -1,11 +1,10 @@
 using System.Globalization;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Fontisso.NET.Services;
+using Fontisso.NET.Modules.Composition;
 using Fontisso.NET.ViewModels;
 using Fontisso.NET.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,11 +33,7 @@ public partial class App : Application
             // Without this line you will get duplicate validations from both Avalonia and CT
             BindingPlugins.DataValidators.RemoveAt(0);
             
-            var services = new ServiceCollection();
-            services.AddFontissoApp();
-            
-            var provider = services.BuildServiceProvider();
-            Ioc.Default.ConfigureServices(provider);
+            Ioc.Default.ConfigureServices(new ServiceCollection().BuildFontissoApp());
             
             desktop.MainWindow = new MainWindow
             {

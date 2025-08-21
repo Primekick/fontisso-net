@@ -2,9 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Fontisso.NET.Configuration.Patching;
-using Fontisso.NET.Data.Models;
 using Fontisso.NET.Modules.Extensions;
+using Fontisso.NET.Modules.Fonts;
 using Fontisso.NET.Services.Metadata;
 using PeNet;
 
@@ -12,17 +11,18 @@ namespace Fontisso.NET.Services.Patching;
 
 public interface IPatchingStrategy
 {
-    void Patch(string filePath, ReadOnlyMemory<byte> rpg2000Data, ReadOnlyMemory<byte> rpg2000GData);
+    void Patch(string filePath, ReadOnlySpan<byte> rpg2000Data, ReadOnlySpan<byte> rpg2000GData);
 }
 
-public sealed class LegacyPatchingStrategy(LegacyPatchingConfig config, IFontMetadataProcessor fontMetadata)
+public sealed class LegacyPatchingStrategy(IFontMetadataProcessor fontMetadata)
     : IPatchingStrategy
 {
-    public void Patch(string filePath, ReadOnlyMemory<byte> rpg2000Data, ReadOnlyMemory<byte> rpg2000GData)
+    public void Patch(string filePath, ReadOnlySpan<byte> rpg2000Data, ReadOnlySpan<byte> rpg2000GData)
     {
+        var config = Modules.Patching.Patching.LegacyPatchingConfig.Value;
         // dump the loader dll into the game's folder
         var exeRootDir = Path.GetDirectoryName(filePath)!;
-        var targetDllFileName = Path.Combine(exeRootDir, config.LegacyLoaderDllName);
+        var targetDllFileName = Path.Combine(exeRootDir, config.DllName);
         using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("LegacyFontLoader")!)
         using (var fileStream = new FileStream(targetDllFileName, FileMode.Create))
         {
@@ -30,46 +30,42 @@ public sealed class LegacyPatchingStrategy(LegacyPatchingConfig config, IFontMet
         }
 
         // before dumping the fonts, change their face name to a pre-set one to match the face name requested by the game
-        Directory.CreateDirectory(Path.Combine(exeRootDir, config.FontsDirectory));
-        var customFontDataA = fontMetadata.SetFaceName(rpg2000Data, config.CustomFontNameA.Span);
-        var customFontDataB = fontMetadata.SetFaceName(rpg2000GData, config.CustomFontNameB.Span);
-        File.OpenAndWrite(
-            Path.Combine(exeRootDir, config.FontsDirectory, config.FontFileNameA),
-            customFontDataA.Span
+        Directory.CreateDirectory(Path.Combine(exeRootDir, config.FontsDir));
+        var dataSlotA = fontMetadata.SetFaceName(rpg2000Data, config.SlotA.Face);
+        var dataSlotB = fontMetadata.SetFaceName(rpg2000GData, config.SlotB.Face);
+        File.WriteAllBytes(
+            Path.Combine(exeRootDir, config.FontsDir, config.SlotA.FileName),
+            dataSlotA
         );
-        File.OpenAndWrite(
-            Path.Combine(exeRootDir, config.FontsDirectory, config.FontFileNameB),
-            customFontDataB.Span
+        File.WriteAllBytes(
+            Path.Combine(exeRootDir, config.FontsDir, config.SlotB.FileName),
+            dataSlotB
         );
         
         // add dll import with a dummy function target so that the dll gets loaded on game boot
         var peFile = new PeFile(filePath);
-        if (peFile.ImportedFunctions!.All(func => func.DLL != config.LegacyLoaderDllName))
+        if (peFile.ImportedFunctions!.All(func => func.DLL != config.DllName))
         {
-            peFile.AddImport(config.LegacyLoaderDllName, "Dummy");
+            peFile.AddImport(config.DllName, "Dummy");
         }
 
         // sometimes the builtin font names appear more than once in the game binary, hence the looped TryReplace calls
         // needs more research
         var binary = peFile.RawFile.ToArray().AsSpan();
-        foreach (var fontName in config.BuiltinFontNamesA)
+        foreach (var (oldName, newName) in config.Rewrites)
         {
-            while (binary.TryReplace(fontName.Span, config.CustomFontNameA.Span));
-        }
-        foreach (var fontName in config.BuiltinFontNamesB)
-        {
-            while (binary.TryReplace(fontName.Span, config.CustomFontNameB.Span));
+            while (binary.TryReplace(oldName, newName)) { }
         }
         
-        File.OpenAndWrite(filePath, binary);
+        File.WriteAllBytes(filePath, binary);
     }
 }
 
 public sealed class ModernPatchingStrategy(IResourceService resourceService) : IPatchingStrategy
 {
-    public void Patch(string filePath, ReadOnlyMemory<byte> rpg2000Data, ReadOnlyMemory<byte> rpg2000GData)
+    public void Patch(string filePath, ReadOnlySpan<byte> rpg2000Data, ReadOnlySpan<byte> rpg2000GData)
     {
-        var resources = new[] { (FontKind.RPG2000, rpg2000Data), (FontKind.RPG2000G, rpg2000GData) };
+        var resources = new (Fonts.FontKind kind, ReadOnlyMemory<byte> data)[] { (Fonts.FontKind.RPG2000, rpg2000Data.ToArray()), (Fonts.FontKind.RPG2000G, rpg2000GData.ToArray()) };
         resourceService.WriteResources(filePath, resources);
     }
 }
