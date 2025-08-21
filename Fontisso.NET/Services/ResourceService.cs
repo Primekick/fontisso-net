@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 using Fontisso.NET.Data.Models;
 using Fontisso.NET.Data.Models.Metadata;
 using Fontisso.NET.Data.Models.WinApi;
-using Fontisso.NET.Helpers;
+using Fontisso.NET.Modules.Extensions;
 
 namespace Fontisso.NET.Services;
 

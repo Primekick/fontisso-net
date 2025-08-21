@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Fontisso.NET.Configuration.Patching;
 using Fontisso.NET.Data.Models;
-using Fontisso.NET.Helpers;
+using Fontisso.NET.Modules.Extensions;
 using Fontisso.NET.Services.Metadata;
 using PeNet;
 

@@ -1,10 +1,12 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Versioning;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
+using System.Runtime.CompilerServices;
 
-namespace Fontisso.NET.Helpers;
+namespace Fontisso.NET.Modules.Extensions;
 
 using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
 using GdiBitmap = System.Drawing.Bitmap;
@@ -58,5 +60,52 @@ public static class BitmapExtensions
 
             return blankBitmap.IntoAvaloniaBitmap();
         }   
+    }
+}
+
+public static class FileExtensions
+{
+    extension(File)
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void OpenAndWrite(string path, ReadOnlySpan<byte> buffer)
+        {
+            using var writer = new BinaryWriter(File.Open(path, FileMode.Create));
+            writer.Write(buffer);
+        }
+    }
+}
+
+public static class SpanExtensions
+{
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool TryReplace(this Span<byte> target, ReadOnlySpan<byte> oldValue, ReadOnlySpan<byte> newValue)
+    {
+        var index = target.IndexOf(oldValue);
+        if (index >= 0)
+        {
+            var replacementSlice = target.Slice(index, oldValue.Length);
+            newValue.CopyTo(replacementSlice);
+            
+            if (newValue.Length < oldValue.Length)
+            {
+                replacementSlice.Slice(newValue.Length).Clear();
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+}
+
+public static class StreamExtensions
+{
+    public static byte[] ReadToByteArray(this Stream input)
+    {
+        using var ms = new MemoryStream();
+        input.CopyTo(ms);
+        
+        return ms.ToArray();
     }
 }

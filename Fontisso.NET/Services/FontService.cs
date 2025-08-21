@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Drawing;
 using System.Linq;
-using Fontisso.NET.Helpers;
+using Fontisso.NET.Modules.Extensions;
 using System.Text;
 using Avalonia.Platform;
 using Fontisso.NET.Data.Models;

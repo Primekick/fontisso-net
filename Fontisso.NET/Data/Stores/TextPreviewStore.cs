@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using Fontisso.NET.Flux;
-using Fontisso.NET.Helpers;
+using Fontisso.NET.Modules.Extensions;
 using Fontisso.NET.Services;
 
 namespace Fontisso.NET.Data.Stores;

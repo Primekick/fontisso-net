@@ -4,7 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.Versioning;
 using Fontisso.NET.Data.Models.Rendering;
-using Fontisso.NET.Helpers;
+using Fontisso.NET.Modules.Extensions;
 
 namespace Fontisso.NET.Services.Rendering;
 
