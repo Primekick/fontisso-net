@@ -3,14 +3,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using DialogHostAvalonia;
-using Fontisso.NET.Data.Models;
-using Fontisso.NET.Data.Stores;
 using Fontisso.NET.Modules;
 using Fontisso.NET.Services;
 
 namespace Fontisso.NET.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase, IRecipient<Flux.StoreChangedMessage<TargetFileState>>,
+public partial class MainWindowViewModel : ViewModelBase, IRecipient<Flux.StoreChangedMessage<Resources.TargetFileState>>,
     IRecipient<Flux.StoreChangedMessage<Fonts.FontStoreState>>
 {
     [ObservableProperty] private FileInputViewModel _fileInput;
@@ -23,7 +21,7 @@ public partial class MainWindowViewModel : ViewModelBase, IRecipient<Flux.StoreC
     
     [ObservableProperty] 
     [NotifyCanExecuteChangedFor(nameof(PatchCommand))]
-    private TargetFileData _fileData;
+    private Resources.TargetFileData _fileData;
 
     private readonly IPatchingService _patchingService;
 
@@ -34,7 +32,7 @@ public partial class MainWindowViewModel : ViewModelBase, IRecipient<Flux.StoreC
         FileInput = fileInput;
         FontPicker = fontPicker;
         TextPreview = textPreview;
-        WeakReferenceMessenger.Default.Register<Flux.StoreChangedMessage<TargetFileState>>(this);
+        WeakReferenceMessenger.Default.Register<Flux.StoreChangedMessage<Resources.TargetFileState>>(this);
         WeakReferenceMessenger.Default.Register<Flux.StoreChangedMessage<Fonts.FontStoreState>>(this);
     }
     
@@ -47,7 +45,7 @@ public partial class MainWindowViewModel : ViewModelBase, IRecipient<Flux.StoreC
         await DialogHost.Show(patchingResult);
     }
 
-    public void Receive(Flux.StoreChangedMessage<TargetFileState> message)
+    public void Receive(Flux.StoreChangedMessage<Resources.TargetFileState> message)
     {
         FileData = message.State.FileData;
     }

@@ -6,7 +6,7 @@
              xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              xmlns:icons="using:Material.Icons.Avalonia"
              xmlns:i18n="clr-namespace:Fontisso.NET.I18n"
-             xmlns:models="using:Fontisso.NET.Data.Models"
+             xmlns:module="using:Fontisso.NET.Modules"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="640"
              x:Class="Fontisso.NET.Views.FileInputView"
              x:DataType="vm:FileInputViewModel">
@@ -68,7 +68,7 @@
                                                 Height="16"
                                                 Margin="0,0,8,0" />
                             <TextBlock Grid.Row="1" Grid.Column="1"
-                                       Text="{Binding FileData.Engine, Converter={x:Static models:EngineTypeConverter.AsString}}"
+                                       Text="{Binding FileData.Engine, Converter={x:Static module:Resources+EngineTypeConverter.AsString}}"
                                        VerticalAlignment="Center"
                                        Classes="Body1" />
                         </Grid>

@@ -2,19 +2,20 @@
 using System.ComponentModel;
 using System.IO;
 using Fontisso.NET.Data.Models;
+using Fontisso.NET.Modules;
 using Fontisso.NET.Services.Patching;
 
 namespace Fontisso.NET.Services;
 
 public interface IPatchingService
 {
-    OperationResult PatchExecutable(TargetFileData tfd, ReadOnlySpan<byte> rpg2000Data,
+    OperationResult PatchExecutable(Resources.TargetFileData tfd, ReadOnlySpan<byte> rpg2000Data,
         ReadOnlySpan<byte> rpg2000GData);
 }
 
 public class PatchingService(PatchingStrategyContext strategyContext) : IPatchingService
 {
-    public OperationResult PatchExecutable(TargetFileData tfd, ReadOnlySpan<byte> rpg2000Data,
+    public OperationResult PatchExecutable(Resources.TargetFileData tfd, ReadOnlySpan<byte> rpg2000Data,
         ReadOnlySpan<byte> rpg2000GData)
     {
         if (!File.Exists(tfd.TargetFilePath))

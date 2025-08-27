@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Fontisso.NET.Data.Models;
-using Fontisso.NET.Data.Stores;
 using Fontisso.NET.Services;
 using Fontisso.NET.Services.Patching;
 using Fontisso.NET.ViewModels;
@@ -57,10 +55,9 @@ public static class Composition
         services
             .AddSingleton<Fonts.FontStore>()
             .AddSingleton<Fonts.TextPreviewStore>()
-            .AddSingleton<TargetFileStore>();
+            .AddSingleton<Resources.TargetFileStore>();
 
         services
-            .AddSingleton<IResourceService, ResourceService>()
             .AddSingleton<IPatchingService, PatchingService>();
         
         services
@@ -69,11 +66,11 @@ public static class Composition
             .AddSingleton(sp => new PatchingStrategyContext([
                 new EnginePatchingMapping(
                     Strategy: sp.GetRequiredKeyedService<IPatchingStrategy>("legacy"),
-                    Engines: [EngineType.Vanilla2k, EngineType.OldVanilla2k3]
+                    Engines: [Resources.EngineType.Vanilla2k, Resources.EngineType.OldVanilla2k3]
                 ),
                 new EnginePatchingMapping(
                     Strategy: sp.GetRequiredKeyedService<IPatchingStrategy>("modern"),
-                    Engines: [EngineType.ModernVanilla2k3, EngineType.OldManiacs, EngineType.ModernManiacs]
+                    Engines: [Resources.EngineType.ModernVanilla2k3, Resources.EngineType.OldManiacs, Resources.EngineType.ModernManiacs]
                 )
             ]));
         

@@ -1,5 +1,5 @@
-﻿using Fontisso.NET.Data.Models;
+﻿using Fontisso.NET.Modules;
 
 namespace Fontisso.NET.Services.Patching;
 
-public record EnginePatchingMapping(IPatchingStrategy Strategy, EngineType[] Engines);
+public record EnginePatchingMapping(IPatchingStrategy Strategy, Resources.EngineType[] Engines);

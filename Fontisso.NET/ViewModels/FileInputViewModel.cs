@@ -7,21 +7,20 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using DialogHostAvalonia;
 using Fontisso.NET.Data.Models;
-using Fontisso.NET.Data.Stores;
 using Fontisso.NET.Modules;
 
 namespace Fontisso.NET.ViewModels;
 
-public partial class FileInputViewModel : ViewModelBase, IRecipient<Flux.StoreChangedMessage<TargetFileState>>
+public partial class FileInputViewModel : ViewModelBase, IRecipient<Flux.StoreChangedMessage<Resources.TargetFileState>>
 {
-    private readonly TargetFileStore _targetFileStore;
+    private readonly Resources.TargetFileStore _targetFileStore;
 
     [ObservableProperty, NotifyPropertyChangedFor(nameof(HasFileData))]
-    private TargetFileData _fileData;
+    private Resources.TargetFileData _fileData;
 
     public bool HasFileData => FileData != default;
 
-    public FileInputViewModel(TargetFileStore targetFileStore)
+    public FileInputViewModel(Resources.TargetFileStore targetFileStore)
     {
         _targetFileStore = targetFileStore;
         WeakReferenceMessenger.Default.Register(this);
@@ -39,7 +38,7 @@ public partial class FileInputViewModel : ViewModelBase, IRecipient<Flux.StoreCh
 
         if (selectedFiles is { Count: > 0 })
         {
-            _targetFileStore.Dispatch(new ExtractTargetFileDataAction(selectedFiles[0].Path.LocalPath));
+            _targetFileStore.Dispatch(new Resources.ExtractTargetFileDataAction(selectedFiles[0].Path.LocalPath));
         }
     }
 
@@ -47,11 +46,11 @@ public partial class FileInputViewModel : ViewModelBase, IRecipient<Flux.StoreCh
     {
         if (selectedFiles is { Length: > 0 })
         {
-            _targetFileStore.Dispatch(new ExtractTargetFileDataAction(selectedFiles[0]));
+            _targetFileStore.Dispatch(new Resources.ExtractTargetFileDataAction(selectedFiles[0]));
         }
     }
 
-    public void Receive(Flux.StoreChangedMessage<TargetFileState> message)
+    public void Receive(Flux.StoreChangedMessage<Resources.TargetFileState> message)
     {
         if (message.State.FileData == default)
         {

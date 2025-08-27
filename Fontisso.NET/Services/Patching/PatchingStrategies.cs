@@ -58,11 +58,11 @@ public sealed class LegacyPatchingStrategy() : IPatchingStrategy
     }
 }
 
-public sealed class ModernPatchingStrategy(IResourceService resourceService) : IPatchingStrategy
+public sealed class ModernPatchingStrategy() : IPatchingStrategy
 {
     public void Patch(string filePath, ReadOnlySpan<byte> rpg2000Data, ReadOnlySpan<byte> rpg2000GData)
     {
         var resources = new (Fonts.FontKind kind, ReadOnlyMemory<byte> data)[] { (Fonts.FontKind.Rpg2000, rpg2000Data.ToArray()), (Fonts.FontKind.Rpg2000G, rpg2000GData.ToArray()) };
-        resourceService.WriteResources(filePath, resources);
+        Resources.WriteResources(filePath, resources);
     }
 }
