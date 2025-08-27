@@ -4,7 +4,6 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using DialogHostAvalonia;
 using Fontisso.NET.Modules;
-using Fontisso.NET.Services;
 
 namespace Fontisso.NET.ViewModels;
 
@@ -23,12 +22,8 @@ public partial class MainWindowViewModel : ViewModelBase, IRecipient<Flux.StoreC
     [NotifyCanExecuteChangedFor(nameof(PatchCommand))]
     private Resources.TargetFileData _fileData;
 
-    private readonly IPatchingService _patchingService;
-
-    public MainWindowViewModel(FileInputViewModel fileInput, FontPickerViewModel fontPicker, TextPreviewViewModel textPreview,
-        IPatchingService patchingService)
+    public MainWindowViewModel(FileInputViewModel fileInput, FontPickerViewModel fontPicker, TextPreviewViewModel textPreview)
     {
-        _patchingService = patchingService;
         FileInput = fileInput;
         FontPicker = fontPicker;
         TextPreview = textPreview;
@@ -41,7 +36,7 @@ public partial class MainWindowViewModel : ViewModelBase, IRecipient<Flux.StoreC
     [RelayCommand(CanExecute = nameof(CanPatch))]
     private async Task Patch()
     {
-        var patchingResult = _patchingService.PatchExecutable(FileData, SelectedFont.DataRpg2000, SelectedFont.DataRpg2000G);
+        var patchingResult = Patching.PatchExecutable(FileData, SelectedFont.DataRpg2000, SelectedFont.DataRpg2000G);
         await DialogHost.Show(patchingResult);
     }
 

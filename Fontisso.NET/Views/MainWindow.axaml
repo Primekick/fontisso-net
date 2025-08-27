@@ -6,7 +6,7 @@
         xmlns:dialogHost="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
         xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
         xmlns:i18n="clr-namespace:Fontisso.NET.I18n"
-        xmlns:models="clr-namespace:Fontisso.NET.Data.Models"
+        xmlns:models="clr-namespace:Fontisso.NET.Modules"
         mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="640"
         Width="960" Height="640"
         CanResize="false"
@@ -20,7 +20,7 @@
     </Design.DataContext>
 
     <Window.DataTemplates>
-        <DataTemplate DataType="models:OperationResult">
+        <DataTemplate DataType="models:Patching+OperationResult">
             <material:Card Margin="0">
                 <StackPanel Margin="16" Spacing="16">
                     <TextBlock Text="{Binding Title}"

@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using DialogHostAvalonia;
-using Fontisso.NET.Data.Models;
 using Fontisso.NET.Modules;
 
 namespace Fontisso.NET.ViewModels;
@@ -54,7 +53,7 @@ public partial class FileInputViewModel : ViewModelBase, IRecipient<Flux.StoreCh
     {
         if (message.State.FileData == default)
         {
-            DialogHost.Show(OperationResult.ErrorResult(I18n.UI.Error_Not2k3File));
+            DialogHost.Show(Patching.OperationResult.ErrorResult(I18n.UI.Error_Not2k3File));
             return;
         }
 
