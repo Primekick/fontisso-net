@@ -15,7 +15,7 @@ public partial class FileInputViewModel : ViewModelBase, IRecipient<Flux.StoreCh
     private readonly Resources.TargetFileStore _targetFileStore;
 
     [ObservableProperty, NotifyPropertyChangedFor(nameof(HasFileData))]
-    private Resources.TargetFileData _fileData;
+    public partial Resources.TargetFileData FileData { get; set; }
 
     public bool HasFileData => FileData != default;
 

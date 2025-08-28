@@ -10,17 +10,22 @@ namespace Fontisso.NET.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase, IRecipient<Flux.StoreChangedMessage<Resources.TargetFileState>>,
     IRecipient<Flux.StoreChangedMessage<Fonts.FontStoreState>>
 {
-    [ObservableProperty] private FileInputViewModel _fileInput;
-    [ObservableProperty] private FontPickerViewModel _fontPicker;
-    [ObservableProperty] private TextPreviewViewModel _textPreview;
+    [ObservableProperty]
+    public partial FileInputViewModel FileInput { get; set; }
 
-    [ObservableProperty] 
+    [ObservableProperty]
+    public partial FontPickerViewModel FontPicker { get; set; }
+
+    [ObservableProperty]
+    public partial TextPreviewViewModel TextPreview { get; set; }
+
+    [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(PatchCommand))]
-    private Fonts.FontEntry _selectedFont;
-    
-    [ObservableProperty] 
+    public partial Fonts.FontEntry SelectedFont { get; set; }
+
+    [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(PatchCommand))]
-    private Resources.TargetFileData _fileData;
+    public partial Resources.TargetFileData FileData { get; set; }
 
     public MainWindowViewModel(FileInputViewModel fileInput, FontPickerViewModel fontPicker, TextPreviewViewModel textPreview)
     {

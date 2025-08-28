@@ -15,14 +15,14 @@ public partial class FontPickerViewModel : ViewModelBase, IRecipient<Flux.StoreC
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FilteredFonts))]
-    private string _searchText = string.Empty;
+    public partial string SearchText { get; set; } = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FilteredFonts))]
-    private ImmutableList<Fonts.FontEntry> _allFonts = ImmutableList<Fonts.FontEntry>.Empty;
+    public partial ImmutableList<Fonts.FontEntry> AllFonts { get; set; } = ImmutableList<Fonts.FontEntry>.Empty;
 
     [ObservableProperty]
-    private Fonts.FontEntry _selectedFont;
+    public partial Fonts.FontEntry SelectedFont { get; set; }
 
     public FontPickerViewModel(Fonts.FontStore fontStore)
     {

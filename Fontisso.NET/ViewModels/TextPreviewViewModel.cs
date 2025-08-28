@@ -15,9 +15,11 @@ public partial class TextPreviewViewModel : ViewModelBase, IRecipient<Flux.Store
 
     private Fonts.FontEntry SelectedFont { get; set; }
 
-    [ObservableProperty] private string _previewText = I18n.UI.Summary_SampleText;
+    [ObservableProperty]
+    public partial string PreviewText { get; set; } = I18n.UI.Summary_SampleText;
 
-    [ObservableProperty] private AvaloniaBitmap _previewImage = AvaloniaBitmap.CreateBlankAvaloniaBitmap(580, 80, Color.White);
+    [ObservableProperty]
+    public partial AvaloniaBitmap PreviewImage { get; set; } = AvaloniaBitmap.CreateBlankAvaloniaBitmap(580, 80, Color.White);
 
     public TextPreviewViewModel(Fonts.TextPreviewStore textPreviewStore)
     {
