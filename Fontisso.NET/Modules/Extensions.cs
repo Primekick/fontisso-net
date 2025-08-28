@@ -84,6 +84,11 @@ public static class SpanExtensions
 
         return false;
     }
+
+    extension<T>(ReadOnlySpan<T>)
+    {
+        public static T[] operator !(ReadOnlySpan<T> self) => self.ToArray();
+    }
 }
 
 public static class StreamExtensions

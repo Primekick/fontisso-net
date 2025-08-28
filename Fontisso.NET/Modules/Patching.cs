@@ -101,7 +101,7 @@ public static class Patching
 
         // sometimes the builtin font names appear more than once in the game binary, hence the looped TryReplace calls
         // needs more research
-        var binary = peFile.RawFile.ToArray().AsSpan();
+        var binary = peFile.RawFile.ToArray();
         foreach (var (oldName, newName) in config.Rewrites)
         {
             while (binary.TryReplace(oldName, newName)) { }
@@ -112,7 +112,7 @@ public static class Patching
 
     private static void PatchModern(string filePath, ReadOnlySpan<byte> rpg2000Data, ReadOnlySpan<byte> rpg2000GData)
     {
-        var resources = new (Fonts.FontKind kind, ReadOnlyMemory<byte> data)[] { (Fonts.FontKind.Rpg2000, rpg2000Data.ToArray()), (Fonts.FontKind.Rpg2000G, rpg2000GData.ToArray()) };
+        var resources = new (Fonts.FontKind kind, ReadOnlyMemory<byte> data)[] { (Fonts.FontKind.Rpg2000, !rpg2000Data), (Fonts.FontKind.Rpg2000G, !rpg2000GData) };
         Resources.WriteResources(filePath, resources);
     }
     
@@ -121,14 +121,14 @@ public static class Patching
         {
             DllName = "Fontisso.NET.LegacyFontLoader.dll",
             FontsDir = "Fonts",
-            SlotA = ("RPG2000.fon", "Cstm01"u8.ToArray()),
-            SlotB = ("RPG2000G.fon", "Cstm02"u8.ToArray()),
+            SlotA = ("RPG2000.fon", !"Cstm01"u8),
+            SlotB = ("RPG2000G.fon", !"Cstm02"u8),
             Rewrites =
             [
-                ("MS Mincho"u8.ToArray(), "Cstm01"u8.ToArray()),
-                ("MS Gothic"u8.ToArray(), "Cstm02"u8.ToArray()),
-                ("RM2000"u8.ToArray(), "Cstm01"u8.ToArray()),
-                ("RMG2000"u8.ToArray(), "Cstm02"u8.ToArray()),
+                (!"MS Mincho"u8, !"Cstm01"u8),
+                (!"MS Gothic"u8, !"Cstm02"u8),
+                (!"RM2000"u8, !"Cstm01"u8),
+                (!"RMG2000"u8, !"Cstm02"u8),
             ]
         },
         isThreadSafe: true

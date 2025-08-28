@@ -190,8 +190,8 @@ public static class Fonts
             .Select(data => new FontEntry(
                 Metadata.ExtractModuleName(data),
                 Metadata.ExtractAttribution(data),
-                Metadata.ApplyFaceName(data, FontKind.Rpg2000.AsByteSpan()).ToArray(),
-                Metadata.ApplyFaceName(data, FontKind.Rpg2000G.AsByteSpan()).ToArray()
+                !Metadata.ApplyFaceName(data, FontKind.Rpg2000.AsByteSpan()),
+                !Metadata.ApplyFaceName(data, FontKind.Rpg2000G.AsByteSpan())
             ))
             .ToImmutableList();
     
